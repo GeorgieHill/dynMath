@@ -15,7 +15,7 @@ $(document).ready(function() {
 	                      "' height='" + CANVAS_HEIGHT + "'></canvas>");
 	var canvas = canvasElement.get(0).getContext("2d");
 	canvasElement.appendTo('body');
-
+	//mycomment
 	var FPS = 30;
 
 	var gameState = {
