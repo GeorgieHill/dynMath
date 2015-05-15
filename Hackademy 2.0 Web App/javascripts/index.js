@@ -14,15 +14,32 @@ $(document).ready(function() {
 	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + 
 	                      "' height='" + CANVAS_HEIGHT + "'></canvas>");
 	var canvas = canvasElement.get(0).getContext("2d");
-
 	canvasElement.appendTo('body');
 
-	var message = "Test Text";
-
 	var FPS = 30;
-	var frameCount = 0;
+
+	var gameState = {
+         startBattle: 1,
+         inBattle: 2,
+         endBattle: 3,
+         victory: 4,
+         defeat: 5
+	};
+
+	var battleState = {
+         NewSpell: 1,
+         CreatingSpell: 2,
+         CastingSpell: 3,
+         Damages: 4
+	};
+
+	var curGameState = gameState.startBattle;
+	var curBattleState = battleState.NewSpell;
 
   	var enemies = [];
+  	var allElements = [];
+
+  	var curElements = [];
 
 	setInterval(function() {
 	  update();
@@ -31,6 +48,7 @@ $(document).ready(function() {
 
 	var player = {
 	  color: "#00A",
+	  heath: 10,
 	  width: 64,
 	  height: 128,
 	  x: 175,
@@ -41,7 +59,43 @@ $(document).ready(function() {
 	  }
 	};
 
-	var tempEnemy = {
+	function Enemy(I){
+	  I = I || {};
+
+	  I.curHealth = 1;
+	  I.maxHealth = 1;
+
+	  I.color = "#0A0";
+
+	  I.x = 425;
+	  I.y = 200;
+
+	  I.width = 64;
+	  I.height = 128;
+
+	  I.draw = function() {
+	    canvas.fillStyle = this.color;
+		canvas.fillRect(this.x-(this.width/2), this.y-(this.height/2), this.width, this.height);
+	    canvas.fillStyle = "#000";
+	  	canvas.fillText(this.curHealth.toString() + "/" + this.maxHealth.toString(), this.x-(this.width/2), this.y-(this.height/2)+this.height+8);
+	  };
+
+	  I.update = function() {
+	  	if(health <= 0){
+	  		I = undefined;
+	  	}
+	  };
+
+	  I.takeDamage = function(){
+	  	//this.active = !this.active;
+	  }
+
+	  return I;
+	}
+
+	var curEnemy = Enemy();
+
+	/*var tempEnemy = {
 		color: "#0A0",
 		width: 64,
 		height: 128,
@@ -51,7 +105,7 @@ $(document).ready(function() {
 		    canvas.fillStyle = this.color;
 		    canvas.fillRect(this.x-(this.width/2), this.y-(this.height/2), this.width, this.height);
 		}
-	};
+	};*/
 
 	var tempBook = {
 		color: "#A00",
@@ -89,187 +143,99 @@ $(document).ready(function() {
 		}
 	};
 
-	var realTempSpell = {
-	  active: true,
-	  element:"fire",
-	  color: "#A2B",
-	  x: 100,
-	  y: 340,
-
-	  width: 40,
-	  height: 40,
-
-	  draw : function() {
-	  	if(this.active)
-	  	{
-		    canvas.fillStyle = this.color;
-		    canvas.fillRect(this.x, this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (70), this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (140), this.y, this.width, this.height);
-	 	}
-	  },
-
-	  setActive : function(){
-	  	this.active = !this.active;
-	  }
-	};
-
-	var realTempSpell3 = {
-	  active: true,
-	  element:"fire",
-	  color: "#A2B",
-	  x: 100,
-	  y: 440,
-
-	  width: 40,
-	  height: 40,
-
-	  draw : function() {
-	  	if(this.active)
-	  	{
-		    canvas.fillStyle = this.color;
-		    canvas.fillRect(this.x, this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (70), this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (140), this.y, this.width, this.height);
-	 	}
-	  },
-
-	  setActive : function(){
-	  	this.active = !this.active;
-	  }
-	};
-
-	var realTempSpell2 = {
-	  active: true,
-	  element:"fire",
-	  color: "#A2B",
-	  x: 315,
-	  y: 340,
-
-	  width: 40,
-	  height: 40,
-
-	  draw : function() {
-	  	if(this.active)
-	  	{
-		    canvas.fillStyle = this.color;
-		    canvas.fillRect(this.x, this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (70), this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (140), this.y, this.width, this.height);
-	 	}
-	  },
-
-	  setActive : function(){
-	  	this.active = !this.active;
-	  }
-	};
-
-	var realTempSpell4 = {
-	  active: true,
-	  element:"fire",
-	  color: "#A2B",
-	  x: 315,
-	  y: 440,
-
-	  width: 40,
-	  height: 40,
-
-	  draw : function() {
-	  	if(this.active)
-	  	{
-		    canvas.fillStyle = this.color;
-		    canvas.fillRect(this.x, this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (70), this.y, this.width, this.height);
-		    canvas.fillRect(this.x + (140), this.y, this.width, this.height);
-	 	}
-	  },
-
-	  setActive : function(){
-	  	this.active = !this.active;
-	  }
-	};
-
-	function Enemy(I) {
+	function Spell(I, element, number, x, y, leftSide) {
 	  I = I || {};
 
-	  I.active = true;
-	  I.age = Math.floor(Math.random() * 128);
-
-	  I.firstNumber = Math.round(Math.random()*100);
-	  I.secondNumber = Math.round(Math.random()*100);
-	  I.answer = this.firstNumber + this.secondNumber;
+	  I.element = element;
+	  I.number = number;
 
 	  I.color = "#A2B";
 
-	  I.x = CANVAS_WIDTH / 4 + Math.random() * CANVAS_WIDTH / 2;
-	  I.y = 0;
-	  I.xVelocity = 0
-	  I.yVelocity = .5;
+	  I.x = x;
+	  I.y = y;
 
-	  I.width = 32;
-	  I.height = 32;
-
-	  I.inBounds = function() {
-	    return I.x >= 0 && I.x <= CANVAS_WIDTH &&
-	      I.y >= 0 && I.y <= CANVAS_HEIGHT;
-	  };
+	  I.width = 40;
+	  I.height = 40;
 
 	  I.draw = function() {
 	    canvas.fillStyle = this.color;
 	    canvas.fillRect(this.x, this.y, this.width, this.height);
 	    canvas.fillStyle = "#000";
-	  	canvas.fillText("" + this.firstNumber + " + " + this.secondNumber, this.x, this.y+this.height+8);
+	    canvas.fillText(element, this.x, this.y+(this.height/2)+8);
+	  	canvas.fillText(number.toString(), this.x, this.y+this.height+8);
 	  };
 
 	  I.update = function() {
-	    I.x += I.xVelocity;
-	    I.y += I.yVelocity;
-
-	    I.xVelocity = 3 * Math.sin(I.age * Math.PI / 64);
-
-	    I.age++;
-
-	    I.active = I.active && I.inBounds();
 	  };
+
+	  I.setActive = function(){
+	  	//this.active = !this.active;
+	  }
 
 	  return I;
 	};
 
+	function CreateSpell (element, number, x, y) {
+		var tempSpell = Spell(tempSpell, element, number, x, y);
+		return tempSpell;
+	}
+
+	allElements.push(CreateSpell("Fire", 1, 100, 340));
+	allElements.push(CreateSpell("Fire", 5, 170, 340));
+	allElements.push(CreateSpell("Fire", 10, 240, 340));
+
+	allElements.push(CreateSpell("Wind", 1, 100, 440));
+	allElements.push(CreateSpell("Wind", 5, 170, 440));
+	allElements.push(CreateSpell("Wind", 10, 240, 440));
+
+	allElements.push(CreateSpell("Water", 1, 315, 340));
+	allElements.push(CreateSpell("Water", 5, 385, 340));
+	allElements.push(CreateSpell("Water", 10, 455, 340));
+
+	allElements.push(CreateSpell("Earth", 1, 315, 440));
+	allElements.push(CreateSpell("Earth", 5, 385, 440));
+	allElements.push(CreateSpell("Earth", 10, 455, 440));
+
+	function GenerateNewSpell(){
+
+	}
+
 	function update() {
-	    if(frameCount%60 == 0 ) {
-		    //enemies.push(Enemy());
+		switch(curGameState){
+			case (gameState.startBattle):
+				//some logic in here
+			break;
+			case (gameState.inBattle):
+
+				switch(curBattleState){
+					case(battleState.NewSpell):
+						
+					break;
+					case(battleState.CreatingSpell):
+					break;
+					case(battleState.CastingSpell):
+					break;
+					case(battleState.Damages):
+					break;
+				}
+
+			break;
 		}
-
-		if(keydown.left)
-			realTempSpell.setActive();
-
-		enemies.forEach(function(enemy) {
-		    enemy.update();
-		});
-
-		enemies = enemies.filter(function(enemy) {
-		    return enemy.active;
-		});
-
-		frameCount = ++frameCount == 60 ? 0 : frameCount;
 	}
 
 	function draw() { 
 		canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
 		player.draw();
-		tempEnemy.draw();
+		curEnemy.draw();
 		tempBook.draw();
-		realTempSpell.draw();
-		realTempSpell2.draw();
-		realTempSpell3.draw();
-		realTempSpell4.draw();
+
 		rightButton.draw();
 		leftButton.draw();
 		//canvas.font = "10px serif";
 
-		enemies.forEach(function(enemy) {
-			//enemy.draw();
+		allElements.forEach(function(selectedSpell) {
+			selectedSpell.draw();
 		});
 	}
 
@@ -285,6 +251,12 @@ $(document).ready(function() {
 	    if (clickedX < (rightButton.x+rightButton.width) && clickedX > rightButton.x && clickedY > rightButton.y && clickedY < (rightButton.y+rightButton.height)) {
 	        alert ('clicked right');
 	    }
+
+	    allElements.forEach(function(selectedSpell) {
+			if (clickedX < (selectedSpell.x+selectedSpell.width) && clickedX > selectedSpell.x && clickedY > selectedSpell.y && clickedY < (selectedSpell.y+selectedSpell.height)) {
+		        console.log(selectedSpell.element + " : " + selectedSpell.number);
+		    }
+		});
 	});
 
 });
