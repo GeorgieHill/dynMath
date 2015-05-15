@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
 // Happens when the mouse is clicked in the canvas
-
+//HERE IS A COMMENT CHANGE
 
 	var CANVAS_WIDTH = 600;
 	var CANVAS_HEIGHT = 600;
