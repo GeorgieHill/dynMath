@@ -15,8 +15,11 @@ $(document).ready(function() {
 	                      "' height='" + CANVAS_HEIGHT + "'></canvas>");
 	var canvas = canvasElement.get(0).getContext("2d");
 
+  
+  
+  
 	canvasElement.appendTo('body');
-
+	
 	var message = "Test Text";
 
 	var FPS = 30;
@@ -156,6 +159,7 @@ $(document).ready(function() {
 		    canvas.fillRect(this.x, this.y, this.width, this.height);
 		    canvas.fillRect(this.x + (70), this.y, this.width, this.height);
 		    canvas.fillRect(this.x + (140), this.y, this.width, this.height);
+		    canvas.strokeRect(0, 0, theCanvas.width+5, theCanvas.height+5);
 	 	}
 	  },
 
