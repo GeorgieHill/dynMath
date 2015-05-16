@@ -2,6 +2,9 @@ var canvas;
 var topButton;
 var middleButton;
 var bottomButton;
+var firstHeart;
+var secondHeart;
+var thirdHeart;
 
 $(document).ready(function() {
 /*	680, 30, 100, 100);
@@ -33,7 +36,7 @@ $(document).ready(function() {
 
 // Hearts #254441 is lost life
 
-	var firstHeart = {
+	firstHeart = {
 
 		draw: function(color) {
 			canvas.fillStyle = color;
@@ -50,7 +53,7 @@ $(document).ready(function() {
 	}
 	firstHeart.draw("#DD2525");
 
-	var secondHeart = {
+	secondHeart = {
 
 		draw: function(color) {
 			canvas.fillStyle = color;
@@ -68,7 +71,7 @@ $(document).ready(function() {
 	}
 	secondHeart.draw("#DD2525");
 
-	var thirdHeart = {
+	thirdHeart = {
 
 		draw: function(color) {
 			canvas.fillStyle = color;

@@ -31,12 +31,16 @@ var gameOps1 = [
 //choices array that will be displayed on screen
 var choices = [];
 
-//variable to hold the correct answer
+//variable to hold the matches and the correct answer
+var matchA;
+var matchB;
 var answer;
 
 //variable to hold number of lives
 var lives = 3;
 
+//variable to hold number of correct answers
+var score=0;
 
 //fill choices array for display on screen
 function getChoices(){
@@ -70,8 +74,8 @@ function getChoices(){
 	}
 
     //get matched choices at determined keys from value in equals array of gameOps1
-    var matchA = gameOps1[matchKey].equals[matchAIndex];
-    var matchB = gameOps1[matchKey].equals[matchBIndex];
+    matchA = gameOps1[matchKey].equals[matchAIndex];
+    matchB = gameOps1[matchKey].equals[matchBIndex];
     //get answer from another key in gameOps1
     answer = gameOps1[answerKey].equals[answerIndex];
 
@@ -117,9 +121,13 @@ function checkAnswer(index){
 	var successIndex = Math.floor(Math.random() * (successPhrase.length)-0) + 0;
 
 	if (choices[index]==answer){
-		swal({   
-			title: successPhrase[successIndex],   
-			timer: 600,   
+
+		score+=1;
+
+		swal({  
+			title: successPhrase[successIndex], 
+			text: "Your score is now " + score.toString() + "!!!",  
+			timer: 700,   
 			showConfirmButton: false });
 		//remove text from canvas
 		topButton.draw();
@@ -128,7 +136,46 @@ function checkAnswer(index){
 		//get next set of choices
 		getChoices();
 	}else{
-		console.log("nope..wrong answer");
+
+		swal({   
+			title: "Oops... That's not quite right...",   
+			text: matchA + " = " + matchB,   
+			html: true });
+
+
+		//redraw heart to indicate loss of life
+		//number of lives left determines which heart is blacked out
+		switch(lives) {
+		    case 3:
+		        thirdHeart.draw("#254441");
+		        break;
+		    case 2:
+		        secondHeart.draw("#254441");
+		        break;
+		    case 1:
+		        firstHeart.draw("#254441");
+		        break;
+		    default:
+        		break;
+		}
+
+		//remove a life for player
+		lives-=1;
+
+		//remove quiz text from canvas
+		topButton.draw();
+		middleButton.draw();
+		bottomButton.draw();
+			
+		//get new quiz choices if there are lives left
+		if (lives>0){
+			//get next set of choices
+			getChoices();
+		}else{
+			//go to scoreboard
+			//********************
+		}
+
 	}
 }
 
