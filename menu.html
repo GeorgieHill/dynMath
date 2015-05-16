@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 
 <head>
-	<title>Menu</title>
+	<title>Mini Games</title>
 	<link rel="stylesheet" type="text/css" href="loginStyles.css" />
+	<link href='http://fonts.googleapis.com/css?family=Lora:700italic' rel='stylesheet' type='text/css'>
 
 </head>
 
-<body>
-
-	<div id="menu">
-		<label id="label"> Select a Game! </label>
-
-		<form id="menuForm" action="">
-			<input type="submit" value="wizard math">
-		</form>
-
-		<form id="menuForm" class="clearBoth" action="fractionGame/index.html">
-			<input type="submit" value="fractions">
-		</form>
+<body id = "body">
+	<div id="header">
+	<h1> Welcome, Select a Game! </h1>	
 	</div>
+
+	<div id = "MathWiz">
+		<table>
+		<tr>
+			<form id="menuForm" action="MathWiz/index.html" >
+				<input type="image" value="Math Wiz" src="MathWiz/img/MathWizButton.png">
+			</form>
+		</tr>
+		</table>
+	</div>
+	<br>
+		
+	
+	<div id = "FractionWiz">
+		<table>
+		<tr>
+			<form id="menuForm" class="clearBoth" action="fractionGame/index.html" >
+				<input type="image" value="Fraction Wiz" src="fractionGame/images/FractionWizButton.png" >
+			</form>
+		</tr>
+		</table>
+	</div>
+
+	
 
 </body>
 
