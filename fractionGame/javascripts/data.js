@@ -1,5 +1,5 @@
-
-{"comparisons":[
+//Array of choices
+var gameOps1 = [
     {"key":0, "equals":["1/20", ".05", "5%", "2/40", "3/60"]},
     {"key":1, "equals":["1/10", ".1", ".10", "10%", "2/20"]},
     {"key":2, "equals":["3/20", ".15", "15%", "6/40", "15/100"]},
@@ -26,4 +26,71 @@
     {"key":23, "equals":["1/7", "2/14", "3/21", "4/28", "5/35"]},
     {"key":24, "equals":["1/8", ".125", "12.5%", "2/16", "3/24"]},
     {"key":25, "equals":["1/9", "2/18", "3/27", "4/36", "5/45"]}
-]}
+]
+
+var opsMin = 0;
+var opsMax = gameOps1.length;
+
+var arrayMin = 0;
+var arrayMax = 4;
+
+var choices = [];
+
+function getChoices(){
+
+	//choose random keys to get data 
+	//choose two values from matchKey for wrong answers and one from answerKey for right answer
+	var matchKey = Math.floor(Math.random() * (opsMax)-opsMin) + opsMin;
+	var answerKey = Math.floor(Math.random() * (opsMax)-opsMin) + opsMin;
+
+	//if keys are the same, choose answerKey again
+	while (matchKey==answerKey){
+		answerKey = Math.floor(Math.random() * (arrayMax+1)-arrayMin) + arrayMin;
+	}
+    
+    //choose random indexes to get data for matching game choices
+    matchAIndex = Math.floor(Math.random() * (arrayMax+1)-arrayMin) + arrayMin;
+    matchBIndex = Math.floor(Math.random() * (arrayMax+1)-arrayMin) + arrayMin;
+    answerIndex = Math.floor(Math.random() * (arrayMax+1)-arrayMin) + arrayMin;
+    
+    //if indexes are the same, choose second one again
+    while (matchAIndex==matchBIndex){
+		matchBIndex = Math.floor(Math.random() * (arrayMax+1)-arrayMin) + arrayMin;
+	}
+
+    //get choices at determined keys from value in equals array of gameOps1
+    var matchA = gameOps1[matchKey].equals[matchAIndex];
+    var matchB = gameOps1[matchKey].equals[matchBIndex];
+    var answer = gameOps1[answerKey].equals[answerIndex];
+
+ 	//add choices to the choices array
+ 	choices = [matchA, matchB, answer];
+
+ 	//shuffle the array for random display
+ 	choices = shuffleArray(choices);
+
+	console.log(matchKey);
+    console.log(answerKey);
+	console.log(matchAIndex);
+    console.log(matchBIndex);
+ 	console.log(matchA);
+    console.log(matchB);
+ 	console.log(answer);
+ 	console.log(choices);
+
+ 	return choices; 	
+}
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+
+
+
