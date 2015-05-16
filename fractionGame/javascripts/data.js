@@ -117,7 +117,7 @@ function shuffleArray(array) {
 function checkAnswer(index){
 
 	var successPhrase = ["Yes!", "Amazing!!", "You're Brilliant!!", "Wow!!", "Incredible!", 
-					"Great Job!!", "What a Brain!", "Keep It Up!", "Excellent!", "I'm So Proud!"];
+					"Great Job!!", "What a Brain!", "Keep It Up!", "Excellent!", "Mind Blown!"];
 	var successIndex = Math.floor(Math.random() * (successPhrase.length)-0) + 0;
 
 	if (choices[index]==answer){
@@ -136,48 +136,62 @@ function checkAnswer(index){
 		//get next set of choices
 		getChoices();
 	}else{
-
+		//alert to show correct answer
 		swal({   
 			title: "Oops... That's not quite right...",   
 			text: matchA + " = " + matchB,   
-			html: true });
+			html: true
+			}, function(){
+				//continue game
+				playMore();
+			});//end alert
 
+	}//end else for wrong answer
+}//end checkanswer function
 
-		//redraw heart to indicate loss of life
-		//number of lives left determines which heart is blacked out
-		switch(lives) {
-		    case 3:
-		        thirdHeart.draw("#254441");
-		        break;
-		    case 2:
-		        secondHeart.draw("#254441");
-		        break;
-		    case 1:
-		        firstHeart.draw("#254441");
-		        break;
-		    default:
-        		break;
-		}
+function playMore(){
+	//redraw heart to indicate loss of life
+	//number of lives left determines which heart is blacked out
+	switch(lives) {
+	    case 3:
+	        thirdHeart.draw("#254441");
+	        break;
+	    case 2:
+	        secondHeart.draw("#254441");
+	        break;
+	    case 1:
+	        firstHeart.draw("#254441");
+	        break;
+	    default:
+    		break;
+	}//end switch
 
-		//remove a life for player
-		lives-=1;
+	//remove a life for player
+	lives-=1;
 
-		//remove quiz text from canvas
-		topButton.draw();
-		middleButton.draw();
-		bottomButton.draw();
-			
-		//get new quiz choices if there are lives left
-		if (lives>0){
-			//get next set of choices
-			getChoices();
-		}else{
-			//go to scoreboard
-			//********************
-		}
-
+	//remove quiz text from canvas
+	topButton.draw();
+	middleButton.draw();
+	bottomButton.draw();
+		
+	//get new quiz choices if there are lives left
+	if (lives>0){
+		//get next set of choices
+		getChoices();
+	}else{
+		//alert to end game
+		swal({   
+			title: "No More Lives!",   
+			text: "Great Game... Please Play Again!",   
+			html: true
+			}, function(){
+				//continue game
+				playMore();
+			});//end alert
+		//go to scoreboard
+		window.location.href = "./highScores.html";
 	}
-}
+}//end playmore
 
 
 
