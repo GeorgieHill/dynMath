@@ -5,32 +5,35 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-// Happens when the mouse is clicked in the canvas
-//HERE IS A COMMENT CHANGE
-
+	//Creating and appending the canvas to the HTML
 	var CANVAS_WIDTH = 600;
 	var CANVAS_HEIGHT = 600;
-
-	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + 
-	                      "' height='" + CANVAS_HEIGHT + "'></canvas>");
+	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "'></canvas>");
 	var canvas = canvasElement.get(0).getContext("2d");
-	canvasElement.appendTo('body');
-	//mycomment
+	canvasElement.appendTo('#canDiv');
+
+	//How many frames per second we are trying to run
 	var FPS = 30;
 
+    //this is how the game will run 
+	setInterval(function() {
+		update();
+		draw();
+	}, 1000/FPS);
+
 	var gameState = {
-         startBattle: 1,
-         inBattle: 2,
-         endBattle: 3,
-         victory: 4,
-         defeat: 5
+        startBattle: 1,
+        inBattle: 2,
+        endBattle: 3,
+        victory: 4,
+        defeat: 5
 	};
 
 	var battleState = {
-         NewSpell: 1,
-         CreatingSpell: 2,
-         CastingSpell: 3,
-         Damages: 4
+        NewSpell: 1,
+        CreatingSpell: 2,
+        CastingSpell: 3,
+        Damages: 4
 	};
 
 	var curGameState = gameState.startBattle;
@@ -41,10 +44,7 @@ $(document).ready(function() {
 
   	var curElements = [];
 
-	setInterval(function() {
-	  update();
-	  draw();
-	}, 1000/FPS);
+
 
 	var player = {
 	  color: "#00A",
@@ -212,14 +212,19 @@ $(document).ready(function() {
 						
 					break;
 					case(battleState.CreatingSpell):
+
 					break;
 					case(battleState.CastingSpell):
+
 					break;
 					case(battleState.Damages):
 					break;
 				}
 
 			break;
+			case (gameState.endBattle):
+			break;
+			
 		}
 	}
 

@@ -13,13 +13,12 @@
 }
 
 h1{
-       border: 5px double #c3c3c3;
+    border: 5px double #c3c3c3;
     margin-left: auto;
     margin-right: auto;
-    text-align: center
+    text-align: center;
     font-family: fantasy;
-    padding: 0px;
-    
+    padding: 0px; 
 }
 
 p {
@@ -30,4 +29,13 @@ p {
     font-size: 4vw;
     text-align: center;
     
+}
+
+#canDiv{
+    width: 600px;
+    margin: auto;
+}
+
+#myCanvas{
+    margin: auto;
 }
