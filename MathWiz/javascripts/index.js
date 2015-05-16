@@ -15,6 +15,18 @@ $(document).ready(function() {
     var bg = new Image()
     bg.src = './img/colored_castle600.jpg';
 
+    var fire = new Image()
+    fire.src = './img/fire50.png';
+
+    var wind = new Image();
+    wind.src = './img/wind50.jpg';
+
+    var water = new Image();
+    water.src = './img/water50.png';
+
+    var earth = new Image();
+    earth.src = './img/rock50.png';
+
 	//How many frames per second we are trying to run
 	var FPS = 30;
 
@@ -65,9 +77,9 @@ $(document).ready(function() {
     //enemy information
 	function Enemy(I){
 	  I = I || {};
-
-	  I.curHealth = 1;
-	  I.maxHealth = 1;
+      var tempNumb = randNumber();
+	  I.curHealth = tempNumb;
+	  I.maxHealth = tempNumb;
 
 	  I.color = "#0A0";
 
@@ -86,15 +98,24 @@ $(document).ready(function() {
 	  };
 
 	  I.update = function() {
-	  	if(I.curHealth <= 0){
-	  		I = undefined;
-	  	}
 	  };
 
 	  I.takeDamage = function(dmg){
         console.log("enemy took " + dmg + " damage");
         I.curHealth -= dmg;
 	  	//this.active = !this.active;
+
+        if(I.curHealth <= 0){
+            ClearCurrentSpell(currentRecipe);
+            ClearCurrentSpell(currentSpell);
+            //alert("here");
+            curGameState = gameState.endBattle;
+            curEnemy = undefined;
+        }
+        else{
+            ClearCurrentSpell(currentSpell);
+            curBattleState = battleState.CreatingSpell;
+        }
 	  }
 
 	  return I;
@@ -138,8 +159,8 @@ $(document).ready(function() {
                     eleSuccess = true;
 
                 if(r in currentSpell){
-                    console.log("spell:" + currentSpell[r] + " % recipe:" + currentRecipe[r] + " = "+currentSpell[r] % currentRecipe[r]);
-                    if(currentSpell[r] % currentRecipe[r] == 0)
+                    console.log("spell:" + currentSpell[r].number + " % recipe:" + currentRecipe[r].number + " = "+currentSpell[r].number % currentRecipe[r].number);
+                    if(currentSpell[r].number % currentRecipe[r].number == 0)
                         eleSuccess = true;
                 }
 
@@ -168,11 +189,11 @@ $(document).ready(function() {
         for(var r in currentRecipe){
             if(r != "Damage"){ 
                 if(tempScale == 0)
-                    tempScale = currentSpell[r]/currentRecipe[r];
+                    tempScale = currentSpell[r].number/currentRecipe[r].number;
                 else{
                     var curS = false;
 
-                        if(tempScale == currentSpell[r]/currentRecipe[r])
+                        if(tempScale == currentSpell[r].number/currentRecipe[r].number)
                             curS = true;
 
                     scaled = curS;
@@ -224,27 +245,36 @@ $(document).ready(function() {
     var spellScale = 1;
 
     //constructor for all the elements
-	function Element(I, element, number, x, y, leftSide) {
+	function Element(I, element, number, x, y, startX, startY, img) {
 	  I = I || {};
 
 	  I.element = element;
 	  I.number = number;
-
+      I.img = img;
 	  I.color = "#A2B";
 
 	  I.x = x;
 	  I.y = y;
+      I.startX = startX;
+      I.startY = startY;
 
 	  I.width = 60;
 	  I.height = 60;
 
 	  I.draw = function() {
+        if(I.x < I.startX)
+            I.startX -= 20;
+
+        if(y < startY)
+            I.startY -= 20;
+
 	    canvas.fillStyle = this.color;
-	    canvas.fillRect(this.x, this.y, this.width, this.height);
+        canvas.drawImage(this.img, this.startX,this.startY);
+	    //canvas.fillRect(this.x, this.y, this.width, this.height);
 	    canvas.fillStyle = "#000";
         canvas.font = "20px sans-serif";
-	    canvas.fillText(element, this.x, this.y+(this.height/2)+8);
-	  	canvas.fillText(number.toString(), this.x, this.y+this.height);
+	    //canvas.fillText(element, this.x, this.y+(this.height/2)+8);
+	  	canvas.fillText(this.number.toString()+"x", this.startX, this.startY+this.height);
 	  };
 
 	  I.update = function() {
@@ -258,33 +288,33 @@ $(document).ready(function() {
 	};
 
     //creating the spells
-	function CreateElement (element, number, x, y) {
-		var tempElem = Element(tempElem, element, number, x, y);
+	function CreateElement (element, number, x, y, startX, startY,  img) {
+		var tempElem = Element(tempElem, element, number, x, y, startX, startY, img);
 		return tempElem;
 	}
 
-	allElements.push(CreateElement("Fire", 1, 90, 365));
-	allElements.push(CreateElement("Fire", 5, 160, 365));
-	allElements.push(CreateElement("Fire", 10, 230, 365));
+	allElements.push(CreateElement("Fire", 1, 90, 365, 90, 365, fire));
+	allElements.push(CreateElement("Fire", 5, 160, 365, 160, 365, fire));
+	allElements.push(CreateElement("Fire", 10, 230, 365, 230, 365, fire));
 
-	allElements.push(CreateElement("Wind", 1, 90, 465));
-	allElements.push(CreateElement("Wind", 5, 160, 465));
-	allElements.push(CreateElement("Wind", 10, 230, 465));
+	allElements.push(CreateElement("Wind", 1, 90, 465, 90, 465, wind));
+	allElements.push(CreateElement("Wind", 5, 160, 465,  160, 465, wind));
+	allElements.push(CreateElement("Wind", 10, 230, 465, 230, 465, wind));
 
-	allElements.push(CreateElement("Water", 1, 315, 365));
-	allElements.push(CreateElement("Water", 5, 385, 365));
-	allElements.push(CreateElement("Water", 10, 455, 365));
+	allElements.push(CreateElement("Water", 1, 315, 365, 315, 365, water));
+	allElements.push(CreateElement("Water", 5, 385, 365, 385, 365, water));
+	allElements.push(CreateElement("Water", 10, 455, 365, 455, 365, water));
 
-	allElements.push(CreateElement("Earth", 1, 315, 465));
-	allElements.push(CreateElement("Earth", 5, 385, 465));
-	allElements.push(CreateElement("Earth", 10, 455, 465));
+	allElements.push(CreateElement("Earth", 1, 315, 465, 315, 465, earth));
+	allElements.push(CreateElement("Earth", 5, 385, 465, 385, 465, earth));
+	allElements.push(CreateElement("Earth", 10, 455, 465, 455, 465, earth));
 
     //This is where the game will generate a new spell recipes
 	function GenerateNewSpell(){
         currentRecipe['Damage'] = 1;
-        currentRecipe['Fire'] = 1;
-        currentRecipe['Earth'] = 1;
-        currentRecipe['Wind'] = 1;
+        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 0, 0, 0, 0, fire);
+        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 50,0, 50, 0, earth);
+        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 100,0, 100, 0, wind);
         console.log(Object.keys(currentRecipe));
 	}
 
@@ -323,12 +353,7 @@ $(document).ready(function() {
                         //console.log("casating spell");
 					break;
 					case(battleState.Damages):
-                        
                         curEnemy.takeDamage(currentRecipe['Damage']*spellScale);
-                        ClearCurrentSpell(currentRecipe);
-                        ClearCurrentSpell(currentSpell);
-                        //alert("here");
-                        curGameState = gameState.endBattle;
 					break;
 				}
 
@@ -344,7 +369,8 @@ $(document).ready(function() {
         canvas.drawImage(bg,0,0);
         
 		player.draw();
-		curEnemy.draw();
+        if(curEnemy != null)
+		  curEnemy.draw();
 		tempBook.draw();
 
 		rightButton.draw();
@@ -352,6 +378,20 @@ $(document).ready(function() {
 
         if(Object.keys(currentSpell).length > 0)
             castButton.draw();
+
+        for(var k in currentRecipe){
+            if(k!="Damage")
+                currentRecipe[k].draw();
+            else{        
+                canvas.fillStyle = "#000";
+                canvas.font = "20px sans-serif";  
+                canvas.fillText("= "+currentRecipe[k] + " damage", 160, 30);
+            }
+        }
+
+        for(var s in currentSpell){
+            currentSpell[s].draw();
+        }
 
 		allElements.forEach(function(ele) {
 			ele.draw();
@@ -385,12 +425,12 @@ $(document).ready(function() {
                         if(k == selEle.element)
                         {
                             found = true;
-                            currentSpell[selEle.element] += selEle.number;
+                            currentSpell[k].number += selEle.number;
                         }
                     }
 
                     if(!found){
-                        currentSpell[selEle.element] = selEle.number;
+                        currentSpell[selEle.element] = CreateElement(selEle.element, selEle.number, Object.keys(currentSpell).length*50, 60, Object.keys(currentSpell).length*50, 60, selEle.img);
                     }
 
                     console.log(Object.keys(currentSpell));
