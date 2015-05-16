@@ -44,7 +44,7 @@ $(document).ready(function() {
 		width: 100,
 		height: 100,
 		x: 680,
-		y: 0,
+		y: 30,
 		draw: function() {
 				canvas.fillStyle = this.color;
 				canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -63,7 +63,7 @@ $(document).ready(function() {
 				canvas.fillRect(this.x, this.y, this.width, this.height);
 		}
 	};
-
+	middleButton.draw();
 	var bottomButton = {
 		color: "#DD2525",
 		width: 100,
@@ -75,7 +75,7 @@ $(document).ready(function() {
 				canvas.fillRect(this.x, this.y, this.width, this.height);
 		}
 	};
-
+	bottomButton.draw();
 	// Happens when the mouse is clicked in the canvas
 	$('#myCanvas').click(function (e) {
 		var clickedX = e.pageX - this.offsetLeft;
