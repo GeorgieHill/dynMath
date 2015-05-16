@@ -133,6 +133,8 @@ $(document).ready(function() {
 	};
 	bottomButton.draw();
 
+
+
 	// Answer Text
 	canvas.fillStyle = "#254441"
 	canvas.font = "25px Georgia";
