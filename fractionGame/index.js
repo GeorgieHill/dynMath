@@ -64,6 +64,7 @@ $(document).ready(function() {
 		}
 	};
 	middleButton.draw();
+
 	var bottomButton = {
 		color: "#DD2525",
 		width: 100,
@@ -80,12 +81,16 @@ $(document).ready(function() {
 	$('#myCanvas').click(function (e) {
 		var clickedX = e.pageX - this.offsetLeft;
 	  var clickedY = e.pageY - this.offsetTop;
-	  //alert(clickedX + " : " + clickedY);    if (clickedX < (leftButton.x+leftButton.width) && clickedX > leftButton.x && clickedY > leftButton.y && clickedY < (leftButton.y+leftButton.height)) {
-	  //      alert ('clicked left');
-	  //}
+	  if (clickedX < (topButton.x+topButton.width) && clickedX > topButton.x && clickedY > topButton.y && clickedY < ((topButton).y+topButton.height)) {
+	        alert ('clicked top');
+	  }
+		if (clickedX < (middleButton.x+middleButton.width) && clickedX > middleButton.x && clickedY > middleButton.y && clickedY < (middleButton.y+middleButton.height)) {
+	        alert ('clicked middle');
+	  }
+		if (clickedX < (bottomButton.x+bottomButton.width) && clickedX > bottomButton.x && clickedY > bottomButton.y && clickedY < (bottomButton.y+bottomButton.height)) {
+	        alert ('clicked bottom');
+	  }
 
-	  //if (clickedX < (rightButton.x+rightButton.width) && clickedX > rightButton.x && clickedY > rightButton.y && clickedY < (rightButton.y+rightButton.height)) {        alert ('clicked right');
-	//}
 
 });
 });
