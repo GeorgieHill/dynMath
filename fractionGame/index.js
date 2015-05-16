@@ -36,6 +36,23 @@ $(document).ready(function() {
 
 // Hearts #254441 is lost life
 
+	updateScore = {
+
+		draw: function(num) {
+
+			var c = document.getElementById("myCanvas");
+			canvas.font = "30px Georgia";
+			var gradient= canvas.createLinearGradient(0,0,c.width,0);
+			gradient.addColorStop("0.5","#5F38FF");
+			gradient.addColorStop("0.58","#FFFFFF");
+
+			canvas.fillStyle = gradient;
+			canvas.fillText("Score: " + num ,350,50);
+		}
+	}
+
+	updateScore.draw(0);
+
 	firstHeart = {
 
 		draw: function(color) {
