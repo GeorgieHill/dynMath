@@ -1,5 +1,7 @@
 //Global variable – to set player level
-var difficulty =  11; var levelup = 0; var numcorrect = 0;
+var difficulty =  11; 
+var levelup = 0; 
+var numCorrect = 0;
 
 //Generates a random number for the spells. 
 function randNumber() {
@@ -11,6 +13,16 @@ function randNumber() {
     }   
     difficulty= difficulty + levelup;
     // starts at 0-10 then range gets larger by 10 each level up.
-    var num = Math.round( Math.random()*difficulty);
-}
+ 
+    
+    var result = Math.round( Math.random()*difficulty);
+    if (result == 0) {
+       result = Math.round( Math.random()*difficulty);
+    }
+   if (result != 0){
+    num =result; 
+   }
+    
 
+    return num;
+}

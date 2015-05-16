@@ -1,3 +1,6 @@
+/*CSS for Math Wiz*/
+
+
 #body {
    /*border: 5px solid #c3c3c3; */
     margin-left: auto;
@@ -46,4 +49,15 @@ p {
 
 #myCanvas{
     margin: auto;
+}
+#nav{
+      margin: auto;
+
+}
+#nav table {
+   padding-left: 0; padding-right: 0; margin-left: auto; margin-right: 5; display: block;
+}
+#nav td{
+   border: groove;
+   color: white;
 }

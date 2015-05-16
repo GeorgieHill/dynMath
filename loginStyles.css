@@ -2,7 +2,7 @@
 
 body {
 	font-family: sans-serif;
-	background-color: #31353D;
+	background-color: #31353d;
 	 
    
 }
@@ -150,6 +150,16 @@ h1{
 }
 
 #FractionWiz{
+    border: 10px double;
+    color: rgb(0,162,232);
+    /*padding: 15px; */
+    height: 50px;
+    width: 300px;
+     margin-left: auto;
+    margin-right: auto;
+    
+}
+#SignOut{
     border: 10px double;
     color: rgb(0,162,232);
     /*padding: 15px; */
