@@ -13,7 +13,16 @@ function randNumber() {
     }   
     difficulty= difficulty + levelup;
     // starts at 0-10 then range gets larger by 10 each level up.
-    var num = Math.round( Math.random()*difficulty);
+ 
+    
+    var result = Math.round( Math.random()*difficulty);
+    if (result == 0) {
+       result = Math.round( Math.random()*difficulty);
+    }
+   if (result != 0){
+    num =result; 
+   }
+    
 
     return num;
 }
