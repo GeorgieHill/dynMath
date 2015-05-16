@@ -1,7 +1,7 @@
-var canvas; 
+var canvas;
 var topButton;
 var middleButton;
-var bottomButton; 
+var bottomButton;
 
 $(document).ready(function() {
 /*	680, 30, 100, 100);
@@ -31,14 +31,12 @@ $(document).ready(function() {
 	canvas.fillRect(680, 270, 100, 100);
 */
 
-// Hearts
+// Hearts #254441 is lost life
 
 	var firstHeart = {
 
-		color: "#DD2525",
-
-		draw: function() {
-			canvas.fillStyle = this.color;
+		draw: function(color) {
+			canvas.fillStyle = color;
 			canvas.beginPath();
 			canvas.moveTo(80,50);
 			canvas.bezierCurveTo(75,37,70,25,50,25);
@@ -50,14 +48,12 @@ $(document).ready(function() {
 			canvas.fill();
 		}
 	}
-	firstHeart.draw();
+	firstHeart.draw("#DD2525");
 
 	var secondHeart = {
 
-		color: "#DD2525",
-
-		draw: function() {
-			canvas.fillStyle = this.color;
+		draw: function(color) {
+			canvas.fillStyle = color;
 			canvas.beginPath();
 			canvas.moveTo(80,50+130);
 			canvas.bezierCurveTo(75,37+130,70,25+130,50,25+130);
@@ -70,14 +66,12 @@ $(document).ready(function() {
 
 		}
 	}
-	secondHeart.draw();
+	secondHeart.draw("#DD2525");
 
 	var thirdHeart = {
 
-		color: "#DD2525",
-
-		draw: function() {
-			canvas.fillStyle = this.color;
+		draw: function(color) {
+			canvas.fillStyle = color;
 			canvas.beginPath();
 			canvas.moveTo(80,50+260);
 			canvas.bezierCurveTo(75,37+260,70,25+260,50,25+260);
@@ -90,7 +84,7 @@ $(document).ready(function() {
 
 		}
 	}
-	thirdHeart.draw();
+	thirdHeart.draw("#DD2525");
 
 
 
