@@ -19,6 +19,36 @@ $(document).ready(function() {
 	canvas = canvasElement.get(0).getContext("2d");
 	canvasElement.appendTo('#canDiv');
 
+	//How many frames per second we are trying to run
+	var FPS = 30;
+
+		//this is how the game will run; running update and draw every "frame"
+	/*setInterval(function() {
+		update();
+		draw();
+	}, 1000/FPS);
+*/
+	var bolt = new Image();
+	bolt.src = "/images/bolt.png";
+
+	var scroll = new Image();
+	scroll.src = "/images/scroll.png";
+
+	boltPath = {
+
+		startX: 350,
+		startY: 200,
+		draw: function() {
+			if(this.x < this.startX)
+					this.startX -= 20;
+
+			if(this.y < this.startY)
+					this.startY -= 20;
+
+		canvas.fillStyle = this.color;
+			canvas.drawImage(this.img, this.startX,this.startY);
+		}
+	}
 	//var canvas = c.getContext("2d");
 	canvas.fillStyle = "#FF6F59";
 	canvas.fillRect(0,0,800,400);
@@ -35,6 +65,23 @@ $(document).ready(function() {
 */
 
 // Hearts #254441 is lost life
+
+	updateScore = {
+
+		draw: function(num) {
+
+			var c = document.getElementById("myCanvas");
+			canvas.font = "30px Georgia";
+			var gradient= canvas.createLinearGradient(0,0,c.width,0);
+			gradient.addColorStop("0.5","#5F38FF");
+			gradient.addColorStop("0.58","#FFFFFF");
+
+			canvas.fillStyle = gradient;
+			canvas.fillText("Score: " + num ,350,50);
+		}
+	}
+
+	updateScore.draw(0);
 
 	firstHeart = {
 
@@ -95,14 +142,15 @@ $(document).ready(function() {
 	//var canvas = document.getElementById("myCanvas");
 
 	topButton = {
-		color: "#87E5BB",
+		/*color: "#87E5BB",
 		width: 100,
-		height: 100,
+		height: 100,*/
 		x: 680,
 		y: 30,
 		draw: function() {
-				canvas.fillStyle = this.color;
-				canvas.fillRect(this.x, this.y, this.width, this.height);
+			//	canvas.fillStyle = this.color;
+			//	canvas.fillRect(this.x, this.y, this.width, this.height);
+			canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
 	topButton.draw();
