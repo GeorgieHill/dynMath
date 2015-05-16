@@ -1,0 +1,49 @@
+#body {
+   /*border: 5px solid #c3c3c3; */
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Latio;
+    height: auto;
+    width: auto;
+   /* border: 5px solid black; */
+       background: black;
+}
+
+#banner{
+    /*border: 5px double #c3c3c3;*/
+    width: 75%;
+    height: 10%; 
+    background: black;
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+}
+
+#canDiv{
+   border: 3px double white;
+}
+h1{
+    border: 5px double #c3c3c3;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: fantasy;
+    padding: 0px; 
+}
+
+p {
+   font-family: fantasy; 
+}
+
+.boardcaption {
+    font-size: 4vw;
+    text-align: center;
+    
+}
+
+#canDiv{
+    width: 600px;
+    margin: auto;
+}
+
+#myCanvas{
+    margin: auto;
+}
