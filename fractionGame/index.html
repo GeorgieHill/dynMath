@@ -12,12 +12,12 @@
     <script>
       var c = document.getElementById("myCanvas");
 
-      //background rectangle
+      // Background Rectangle
       var bg = c.getContext("2d");
       bg.fillStyle = "#FF6F59";
       bg.fillRect(0,0,800,400);
 
-      //Answer squares
+      // Answer Squares
       bg.fillStyle = "#87E5BB"
       bg.fillRect(680, 30, 100, 100);
 
@@ -26,6 +26,20 @@
 
       bg.fillStyle = "#87E5BB"
       bg.fillRect(680, 270, 100, 100);
+
+      // Answer Text
+      bg.fillStyle = "#254441"
+      bg.font = "50px Georgia";
+      bg.fillText("1/2", 695, 90);
+
+      bg.fillStyle = "#254441"
+      bg.font = "40px Georgia";
+      bg.fillText("50%", 695, 210);
+
+      bg.fillStyle = "#254441"
+      bg.font = "50px Georgia";
+      bg.fillText("5", 695, 325);
+
 
 
 
