@@ -179,20 +179,43 @@ function playMore(){
 		//get next set of choices
 		getChoices();
 	}else{
-		//alert to end game
-		swal({   
-			title: "No More Lives!",   
-			text: "Great Game... Please Play Again!",   
-			html: true
-			}, function(){
-				//continue game
-				playMore();
-			});//end alert
-		//go to scoreboard
-		window.location.href = "./highScores.html";
+		
+		endGame();
 	}
 }//end playmore
 
+function endGame(){
+	//alert to end game
+	//var isConfirm = true;
+	var isConfirm=false; 
+
+	swal({   
+		title: "No More Lives!",   
+		text: "Great Game... Please Play Again!",   
+		showCancelButton: true,   
+		confirmButtonColor: "#DD6B55",   
+		confirmButtonText: "Play Again",   
+		cancelButtonText: "See High Scores",  
+		timer: 25555, 
+		closeOnConfirm: true,   
+		closeOnCancel: true 
+		}, function(){
+			if(isConfirm){
+				//start over
+				var lives = 3;
+				var score=0;
+
+				topButton.draw();
+				middleButton.draw();
+				bottomButton.draw();
+
+				getChoices();
+			}else{
+				//go to high score screen
+				window.location.href = "./highScores.html";
+			}
+		});//end alert*/
+}
 
 
 
