@@ -51,13 +51,21 @@ p {
     margin: auto;
 }
 #nav{
-      margin: auto;
+    
+   width: 300px;
+    height: 50px; 
+    background: black;
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
 
 }
 #nav table {
    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: 5; display: block;
+
 }
 #nav td{
-   border: groove;
-   color: white;
+   border: double;
+   color: rgb(0,162,232);
+   padding-bottom: 0px;
+   
+   
 }
