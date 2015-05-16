@@ -54,13 +54,13 @@ $(document).ready(function() {
 		draw: function() {
 			canvas.fillStyle = this.color;
 			canvas.beginPath();
-			canvas.moveTo(80+130,50);
-			canvas.bezierCurveTo(75+130,37,70+130,25,50+130,25);
-			canvas.bezierCurveTo(20+130,25,20+130,62.5,20+130,62.5);
-			canvas.bezierCurveTo(20+130,80,40+130,102,75+130,120);
-			canvas.bezierCurveTo(110+130,102,130+130,80,130+130,62.5);
-			canvas.bezierCurveTo(130+130,62.5,130+130,25,100+130,25);
-			canvas.bezierCurveTo(85+130,25,75+130,37,75+130,40);
+			canvas.moveTo(80,50+130);
+			canvas.bezierCurveTo(75,37+130,70,25+130,50,25+130);
+			canvas.bezierCurveTo(20,25+130,20,62.5+130,20,62.5+130);
+			canvas.bezierCurveTo(20,80+130,40,102+130,75,120+130);
+			canvas.bezierCurveTo(110,102+130,130,80+130,130,62.5+130);
+			canvas.bezierCurveTo(130,62.5+130,130,25+130,100,25+130);
+			canvas.bezierCurveTo(85,25+130,75,37+130,75,40+130);
 			canvas.fill();
 
 		}
@@ -74,13 +74,13 @@ $(document).ready(function() {
 		draw: function() {
 			canvas.fillStyle = this.color;
 			canvas.beginPath();
-			canvas.moveTo(80+260,50);
-			canvas.bezierCurveTo(75+260,37,70+260,25,50+260,25);
-			canvas.bezierCurveTo(20+260,25,20+260,62.5,20+260,62.5);
-			canvas.bezierCurveTo(20+260,80,40+260,102,75+260,120);
-			canvas.bezierCurveTo(110+260,102,130+260,80,130+260,62.5);
-			canvas.bezierCurveTo(130+260,62.5,130+260,25,100+260,25);
-			canvas.bezierCurveTo(85+260,25,75+260,37,75+260,40);
+			canvas.moveTo(80,50+260);
+			canvas.bezierCurveTo(75,37+260,70,25+260,50,25+260);
+			canvas.bezierCurveTo(20,25+260,20,62.5+260,20,62.5+260);
+			canvas.bezierCurveTo(20,80+260,40,102+260,75,120+260);
+			canvas.bezierCurveTo(110,102+260,130,80+260,130,62.5+260);
+			canvas.bezierCurveTo(130,62.5+260,130,25+260,100,25+260);
+			canvas.bezierCurveTo(85,25+260,75,37+260,75,40+260);
 			canvas.fill();
 
 		}
