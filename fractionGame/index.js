@@ -1,3 +1,8 @@
+var canvas; 
+var topButton;
+var middleButton;
+var bottomButton; 
+
 $(document).ready(function() {
 /*	680, 30, 100, 100);
 
@@ -8,7 +13,7 @@ $(document).ready(function() {
 	var CANVAS_WIDTH = 800;
 	var CANVAS_HEIGHT = 400;
 	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "' style='border:1px solid #FF6F59;  padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;'></canvas>");
-	var canvas = canvasElement.get(0).getContext("2d");
+	canvas = canvasElement.get(0).getContext("2d");
 	canvasElement.appendTo('#canDiv');
 
 	//var canvas = c.getContext("2d");
@@ -92,7 +97,7 @@ $(document).ready(function() {
 
 	//var canvas = document.getElementById("myCanvas");
 
-	var topButton = {
+	topButton = {
 		color: "#87E5BB",
 		width: 100,
 		height: 100,
@@ -105,7 +110,7 @@ $(document).ready(function() {
 	};
 	topButton.draw();
 
-	var middleButton = {
+	middleButton = {
 		color: "#87E5BB",
 		width: 100,
 		height: 100,
@@ -118,7 +123,7 @@ $(document).ready(function() {
 	};
 	middleButton.draw();
 
-	var bottomButton = {
+	bottomButton = {
 		color: "#87E5BB",
 		width: 100,
 		height: 100,
@@ -133,29 +138,26 @@ $(document).ready(function() {
 
 	// Answer Text
 	canvas.fillStyle = "#254441"
-	canvas.font = "50px Georgia";
-	canvas.fillText("1/2", 695, 90);
+	canvas.font = "25px Georgia";
 
 	canvas.fillStyle = "#254441"
-	canvas.font = "40px Georgia";
-	canvas.fillText("50%", 695, 210);
+	canvas.font = "25px Georgia";
 
 	canvas.fillStyle = "#254441"
-	canvas.font = "50px Georgia";
-	canvas.fillText("5", 695, 325);
+	canvas.font = "25px Georgia";
 
 	// Happens when the mouse is clicked in the canvas
 	$('#myCanvas').click(function (e) {
 		var clickedX = e.pageX - this.offsetLeft;
 	  var clickedY = e.pageY - this.offsetTop;
 	  if (clickedX < (topButton.x+topButton.width) && clickedX > topButton.x && clickedY > topButton.y && clickedY < ((topButton).y+topButton.height)) {
-	        alert ('clicked top');
+	        checkAnswer(0);
 	  }
 		if (clickedX < (middleButton.x+middleButton.width) && clickedX > middleButton.x && clickedY > middleButton.y && clickedY < (middleButton.y+middleButton.height)) {
-	        alert ('clicked middle');
+	        checkAnswer(1);
 	  }
 		if (clickedX < (bottomButton.x+bottomButton.width) && clickedX > bottomButton.x && clickedY > bottomButton.y && clickedY < (bottomButton.y+bottomButton.height)) {
-	        alert ('clicked bottom');
+	        checkAnswer(2);
 	  }
 
 

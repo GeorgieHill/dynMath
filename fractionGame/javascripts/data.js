@@ -1,4 +1,4 @@
-//Array of choices
+//Array of choices for game
 var gameOps1 = [
     {"key":0, "equals":["1/20", ".05", "5%", "2/40", "3/60"]},
     {"key":1, "equals":["1/10", ".1", ".10", "10%", "2/20"]},
@@ -28,15 +28,26 @@ var gameOps1 = [
     {"key":25, "equals":["1/9", "2/18", "3/27", "4/36", "5/45"]}
 ]
 
-var opsMin = 0;
-var opsMax = gameOps1.length;
-
-var arrayMin = 0;
-var arrayMax = 4;
-
+//choices array that will be displayed on screen
 var choices = [];
 
+//variable to hold the correct answer
+var answer;
+
+//variable to hold number of lives
+var lives = 3;
+
+
+//fill choices array for display on screen
 function getChoices(){
+
+	//range of keys in gameOps1
+	var opsMin = 0;
+	var opsMax = gameOps1.length;
+
+	//range of indexes in equals array of gameOps1
+	var arrayMin = 0;
+	var arrayMax = 4;
 
 	//choose random keys to get data 
 	//choose two values from matchKey for wrong answers and one from answerKey for right answer
@@ -58,10 +69,11 @@ function getChoices(){
 		matchBIndex = Math.floor(Math.random() * (arrayMax+1)-arrayMin) + arrayMin;
 	}
 
-    //get choices at determined keys from value in equals array of gameOps1
+    //get matched choices at determined keys from value in equals array of gameOps1
     var matchA = gameOps1[matchKey].equals[matchAIndex];
     var matchB = gameOps1[matchKey].equals[matchBIndex];
-    var answer = gameOps1[answerKey].equals[answerIndex];
+    //get answer from another key in gameOps1
+    answer = gameOps1[answerKey].equals[answerIndex];
 
  	//add choices to the choices array
  	choices = [matchA, matchB, answer];
@@ -78,6 +90,13 @@ function getChoices(){
  	console.log(answer);
  	console.log(choices);
 
+ 	//put choices text onto canvas
+ 	canvas.fillStyle = "#254441"
+	canvas.font = "25px Georgia";
+	canvas.fillText(choices[0], 695, 90);
+	canvas.fillText(choices[1], 695, 210);
+	canvas.fillText(choices[2], 695, 325);
+
  	return choices; 	
 }
 
@@ -89,6 +108,28 @@ function shuffleArray(array) {
         array[j] = temp;
     }
     return array;
+}
+
+function checkAnswer(index){
+
+	var successPhrase = ["Yes!", "Amazing!!", "You're Brilliant!!", "Wow!!", "Incredible!", 
+					"Great Job!!", "What a Brain!", "Keep It Up!", "Excellent!", "I'm So Proud!"];
+	var successIndex = Math.floor(Math.random() * (successPhrase.length)-0) + 0;
+
+	if (choices[index]==answer){
+		swal({   
+			title: successPhrase[successIndex],   
+			timer: 600,   
+			showConfirmButton: false });
+		//remove text from canvas
+		topButton.draw();
+		middleButton.draw();
+		bottomButton.draw();
+		//get next set of choices
+		getChoices();
+	}else{
+		console.log("nope..wrong answer");
+	}
 }
 
 
