@@ -26,7 +26,69 @@ $(document).ready(function() {
 	canvas.fillRect(680, 270, 100, 100);
 */
 
-//DD2525 is heart color
+// Hearts
+
+	var firstHeart = {
+
+		color: "#DD2525",
+
+		draw: function() {
+			canvas.fillStyle = this.color;
+			canvas.beginPath();
+			canvas.moveTo(80,50);
+			canvas.bezierCurveTo(75,37,70,25,50,25);
+			canvas.bezierCurveTo(20,25,20,62.5,20,62.5);
+			canvas.bezierCurveTo(20,80,40,102,75,120);
+			canvas.bezierCurveTo(110,102,130,80,130,62.5);
+			canvas.bezierCurveTo(130,62.5,130,25,100,25);
+			canvas.bezierCurveTo(85,25,75,37,75,40);
+			canvas.fill();
+		}
+	}
+	firstHeart.draw();
+
+	var secondHeart = {
+
+		color: "#DD2525",
+
+		draw: function() {
+			canvas.fillStyle = this.color;
+			canvas.beginPath();
+			canvas.moveTo(80+130,50);
+			canvas.bezierCurveTo(75+130,37,70+130,25,50+130,25);
+			canvas.bezierCurveTo(20+130,25,20+130,62.5,20+130,62.5);
+			canvas.bezierCurveTo(20+130,80,40+130,102,75+130,120);
+			canvas.bezierCurveTo(110+130,102,130+130,80,130+130,62.5);
+			canvas.bezierCurveTo(130+130,62.5,130+130,25,100+130,25);
+			canvas.bezierCurveTo(85+130,25,75+130,37,75+130,40);
+			canvas.fill();
+
+		}
+	}
+	secondHeart.draw();
+
+	var thirdHeart = {
+
+		color: "#DD2525",
+
+		draw: function() {
+			canvas.fillStyle = this.color;
+			canvas.beginPath();
+			canvas.moveTo(80+260,50);
+			canvas.bezierCurveTo(75+260,37,70+260,25,50+260,25);
+			canvas.bezierCurveTo(20+260,25,20+260,62.5,20+260,62.5);
+			canvas.bezierCurveTo(20+260,80,40+260,102,75+260,120);
+			canvas.bezierCurveTo(110+260,102,130+260,80,130+260,62.5);
+			canvas.bezierCurveTo(130+260,62.5,130+260,25,100+260,25);
+			canvas.bezierCurveTo(85+260,25,75+260,37,75+260,40);
+			canvas.fill();
+
+		}
+	}
+	thirdHeart.draw();
+
+
+
 
 	//var canvas = document.getElementById("myCanvas");
 
