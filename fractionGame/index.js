@@ -23,16 +23,16 @@ $(document).ready(function() {
 	var FPS = 30;
 
 		//this is how the game will run; running update and draw every "frame"
-	setInterval(function() {
+	/*setInterval(function() {
 		update();
 		draw();
 	}, 1000/FPS);
-
+*/
 	var bolt = new Image();
-	bolt.src = 'images/bolt.png';
+	bolt.src = "/images/bolt.png";
 
 	var scroll = new Image();
-	bolt.scroll = 'images/scroll.png';
+	scroll.src = "/images/scroll.png";
 
 	boltPath = {
 
@@ -47,6 +47,8 @@ $(document).ready(function() {
 
 		canvas.fillStyle = this.color;
 			canvas.drawImage(this.img, this.startX,this.startY);
+		}
+	}
 	//var canvas = c.getContext("2d");
 	canvas.fillStyle = "#FF6F59";
 	canvas.fillRect(0,0,800,400);
