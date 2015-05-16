@@ -15,7 +15,7 @@ $(document).ready(function() {
 */
 	var CANVAS_WIDTH = 800;
 	var CANVAS_HEIGHT = 400;
-	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "' style='border:1px solid #FF6F59;  padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;'></canvas>");
+	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "' style='border:30px double #000000;  padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;'></canvas>");
 	canvas = canvasElement.get(0).getContext("2d");
 	canvasElement.appendTo('#canDiv');
 
