@@ -48,6 +48,17 @@ $(document).ready(function() {
     var starImg = new Image();
     starImg.src = './img/star25.png';
 
+    var dragonImg = new Image();
+    dragonImg.src = './img/dragon128.png';
+
+    var knightImg =  new Image();
+    knightImg.src = './img/knight128.png';
+
+    var skeletonImg = new Image();
+    skeletonImg.src = './img/skeleton128.png';
+
+    var images = [ogreImg, dragonImg, knightImg, skeletonImg];
+
     var ogreSound = new Audio('./sound/ogre.wav');
     var yaySound = new Audio('./sound/yay.mp3');
 
@@ -55,7 +66,7 @@ $(document).ready(function() {
 	var FPS = 30;
     var frameCount = 0;
 
-    var maxTimer = 45;
+    var maxTimer = 60;
     var timer = maxTimer;
     var startTimer = false;
 
@@ -154,6 +165,8 @@ $(document).ready(function() {
       I.startX = 625;
       I.startY = 0;
 
+      I.img = images[Math.floor(Math.random()*images.length)];
+
 	  I.width = 64;
 	  I.height = 128;
 
@@ -183,7 +196,7 @@ $(document).ready(function() {
         }
 
 	    canvas.fillStyle = this.color;
-        canvas.drawImage(ogreImg, this.startX, this.startY);
+        canvas.drawImage(I.img, this.startX, this.startY);
 		//canvas.fillRect(this.x-(this.width/2), this.y-(this.height/2), this.width, this.height);
         if(I.inPlace() && I.curHealth > 0){
 	      canvas.fillStyle = "#000";
@@ -784,11 +797,11 @@ $(document).ready(function() {
 		canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         canvas.drawImage(bg,0,0);
         
+        if(curEnemy != null)
+            curEnemy.draw();
+
 		player.draw();
         staticGem.draw();
-
-        if(curEnemy != null)
-		  curEnemy.draw();
 
         book.draw();
 

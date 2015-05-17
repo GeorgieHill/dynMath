@@ -212,6 +212,12 @@ $(document).ready(function() {
 
 	function update() {
 
+		if (lives<1){
+			startTimer=false;
+		}else{
+			startTimer=true;
+		}
+
 		if(startTimer){
 				if(frameCount % 30 == 0){
 						timer--;
@@ -219,7 +225,17 @@ $(document).ready(function() {
 				}
 
 				if(timer == 0){
-						curBattleState = battleState.DamagePlayer;
+					//yourscript function\
+					swal({   
+						title: "Oops... Time's Up!!!!",   
+						text: "Check this out: " + matchA + " = " + matchB+ "!!",   
+						timer: 800,   
+						showConfirmButton: false
+						});//end alert
+					//playMore();
+					playMore();
+					timer = 20;
+					frameCount = 0;
 				}
 
 				frameCount++;
@@ -316,17 +332,23 @@ $(document).ready(function() {
 				if(boltPath == null)
 					boltPath = Bolt(boltPath, topButton.x + topButton.width/2, topButton.y + topButton.height/2 - 50, 0);
 					//checkAnswer(0);
+					timer = 20;
+					frameCount =0;
 
 	  }
 		if (clickedX < (middleButton.x+middleButton.width) && clickedX > middleButton.x && clickedY > middleButton.y && clickedY < (middleButton.y+middleButton.height)) {
 			if(boltPath == null)
 				boltPath = Bolt(boltPath, middleButton.x + middleButton.width/2 - 50, middleButton.y + middleButton.height/2 - 50, 1);
 				// checkAnswer(1);
+				timer = 20;
+					frameCount =0;
 	  }
 		if (clickedX < (bottomButton.x+bottomButton.width) && clickedX > bottomButton.x && clickedY > bottomButton.y && clickedY < (bottomButton.y+bottomButton.height)) {
 			if(boltPath == null)
 				boltPath = Bolt(boltPath, bottomButton.x + bottomButton.width/2 - 90, bottomButton.y + bottomButton.height/2 - 50, 2);
 					//checkAnswer(2);
+					timer = 20;
+					frameCount =0;
 	  }
 
 
