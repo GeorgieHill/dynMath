@@ -104,6 +104,20 @@ function getChoices(){
  	return choices; 	
 }
 
+/*ADDED FOR REDRAWING STUFF*/
+function drawAnswers(){
+ 	canvas.fillStyle = "#254441"
+	canvas.font = "25px Georgia";
+	canvas.fillText(choices[0], 695, 90);
+	canvas.fillText(choices[1], 695, 210);
+	canvas.fillText(choices[2], 695, 325);
+}
+
+function getLives(){
+	return lives;
+}
+/***************************/
+
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));

@@ -175,13 +175,35 @@ h1{
     
 }
 #footer{
-	width: 255px;
+	width: 100%;
     height: 95px; 
-    background: black;
+    background: rgb(49,53,61);
+    margin: auto;
     padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+    
 }
 
 
 #items{
 	   margin: auto;
+}
+
+#nav{
+    margin: auto;
+   width: 600px;
+    height: 50px; 
+    background: black;
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+
+}
+#nav table {
+   padding-left: 0; padding-right: 0; margin-left: auto; margin-right: 5; display: block;
+
+}
+#nav td{
+   border: double;
+   color: rgb(0,162,232);
+   padding-bottom: 0px;
+   
+   
 }

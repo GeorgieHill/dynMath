@@ -42,6 +42,12 @@ $(document).ready(function() {
     var ogreImg = new Image();
     ogreImg.src = './img/ogre.png';
 
+    var gemImg = new Image();
+    gemImg.src = './img/gem.png';
+
+    var ogreSound = new Audio('./sound/ogre.wav');
+    var yaySound = new Audio('./sound/yay.mp3');
+
 	//How many frames per second we are trying to run
 	var FPS = 30;
     var frameCount = 0;
@@ -80,6 +86,8 @@ $(document).ready(function() {
     //current elements on screen
   	var curElements = [];
 
+    var curGems = [];
+
     //player information
 	var player = {
 	  color: "#00A",
@@ -109,11 +117,24 @@ $(document).ready(function() {
             curEnemy = undefined;
         }
         else{
+            ClearCurrentSpell(currentSpell);
             curBattleState = battleState.CreatingSpell;
         }
       }
 	};
 
+    var staticGem = {
+        gemCount: 0,
+        x: 0,
+        y: 0,
+        draw: function() {
+          canvas.fillStyle = this.color;
+          canvas.drawImage(gemImg, this.x, this.y);
+          canvas.fillStyle = "#000";
+          canvas.font = "40px sans-serif";
+          canvas.fillText(this.gemCount.toString(), this.x+40, this.y+35);
+        }
+    }
     //enemy information
 	function Enemy(I){
 	  I = I || {};
@@ -132,23 +153,35 @@ $(document).ready(function() {
 	  I.width = 64;
 	  I.height = 128;
 
+      I.dead = false;
+
 	  I.draw = function() {
-        if(I.startX != I.x)
-            I.startX -= 20;
+        if(I.isDead){
+            I.startX -= 10;
 
-        if(I.startX < I.x)
-            I.startX = I.x;
+            if(I.startX < -100){
+                curGameState = gameState.EndBattle;
+                curEnemy = undefined;
+            }
+        }
+        else{
+            if(I.startX != I.x)
+                I.startX -= 20;
 
-        if(I.startY != I.y)
-            I.startY += 20;
+            if(I.startX < I.x)
+                I.startX = I.x;
 
-        if(I.startY > I.y)
-            I.startY = I.y;
+            if(I.startY != I.y)
+                I.startY += 20;
+
+            if(I.startY > I.y)
+                I.startY = I.y;
+        }
 
 	    canvas.fillStyle = this.color;
         canvas.drawImage(ogreImg, this.startX, this.startY);
 		//canvas.fillRect(this.x-(this.width/2), this.y-(this.height/2), this.width, this.height);
-        if(I.inPlace()){
+        if(I.inPlace() && I.curHealth > 0){
 	      canvas.fillStyle = "#000";
           canvas.font = "20px sans-serif";
 	  	  canvas.fillText(this.curHealth.toString() + "/" + this.maxHealth.toString(), this.x, this.y+this.height+15);
@@ -165,9 +198,9 @@ $(document).ready(function() {
         if(I.curHealth <= 0){
             ClearCurrentSpell(currentRecipe);
             ClearCurrentSpell(currentSpell);
-            curGameState = gameState.EndBattle;
+            CreateGems(I.maxHealth);
+            //yaySound.play();
             startTimer = false;
-            curEnemy = undefined;
         }
         else{
             ClearCurrentSpell(currentSpell);
@@ -185,6 +218,70 @@ $(document).ready(function() {
 	  return I;
 	}
 
+    function Gem(I) {
+      I = I || {};
+
+      I.x = 0;
+      I.y = 0;
+      I.startX = 350 + Math.random() * 50;
+      I.startY = 175 + Math.random() * 128;
+      I.speed = (Math.random() * 7) + 8;
+      I.inPlace = false;
+      I.addedScore = false;
+
+      I.draw = function() {
+        if(I.startX < I.x)
+            I.startX += I.speed;
+        else if(I.startX > I.x)
+            I.startX -= I.speed;
+        
+        if(Math.abs(I.startY - I.y) < 11 && Math.abs(I.startX - I.x) < 11){
+            if(!I.addedScore){
+                staticGem.gemCount += 10;
+                I.addedScore = true;
+            }
+        }
+
+        if(Math.abs(I.startY - I.y) < 8 && Math.abs(I.startX - I.x) < 8){
+            I.startX = I.x;
+            I.startY = I.y;
+            I.inPlace = true;
+        }
+
+        if(I.startY < I.y)
+            I.startY += I.speed-5;
+        else if(I.startY > I.y)
+            I.startY -= I.speed-(Math.random()*3+2);
+
+        canvas.drawImage(gemImg, I.startX, I.startY);
+      };
+
+      I.update = function() {
+      };
+
+      return I;
+    };
+
+    function CreateGems(amount){
+        for(var i = 0; i < amount; i++){
+            curGems.push(Gem());
+        }
+    }
+
+    function CheckGems(){
+        var rightCount = 0;
+
+        curGems.forEach(function(g) {
+            if(g.inPlace)
+                rightCount++;
+        });
+
+        if(rightCount == curGems.length)
+            return true;
+        else
+            return false;
+    }
+
 	var curEnemy;// = Enemy();
 
     //this is the temp bookImg object
@@ -201,13 +298,13 @@ $(document).ready(function() {
 		}
 	};
 
-    //button to turn page left
+    //cast the spell!
     var castButton = {
         color: "#AAA",
         width: 150,
         height: 50,
         x: 225,
-        y: 275,
+        y: 140,
         draw: function() {
             canvas.fillStyle = this.color;
             canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -312,8 +409,39 @@ $(document).ready(function() {
 
     var spellScale = 1;
 
+    function PlusMinus(I, element, number, x, y) {
+      I = I || {};
+
+      I.element = element;
+      I.number = number;
+
+      I.color = "#000";
+
+      I.x = x;
+      I.y = y;
+
+      I.width = 23;
+      I.height = 23;
+
+      I.draw = function() {
+        canvas.fillStyle = I.color;
+        canvas.fillRect(this.x, this.y, this.width, this.height);
+        canvas.fillStyle = "#FFF";
+
+        var sign = "+";
+        if(number < 0)
+            sign = "-";
+
+        canvas.font = "20px sans-serif";
+        canvas.fillText(sign, this.x+8, this.y+18);
+        //canvas.fillText(I.number.toString()+"x", I.startX, I.startY+I.height);
+      };
+
+      return I;
+    };
+
     //constructor for all the elements
-	function Element(I, element, number, x, y, startX, startY, img) {
+	function Element(I, element, number, x, y, startX, startY, img, inBook) {
 	  I = I || {};
 
 	  I.element = element;
@@ -326,29 +454,42 @@ $(document).ready(function() {
       I.startX = startX;
       I.startY = startY;
 
+      if(inBook){
+          I.plus = PlusMinus(I.plus, I.element, I.number, I.x, I.y+65);
+          I.minus = PlusMinus(I.minus, I.element, -I.number, I.x+27, I.y+65);
+      }
+
 	  I.width = 60;
 	  I.height = 60;
 
 	  I.draw = function() {
-        if(I.startX != I.x)
-            I.startX -= 20;
-
-        if(I.startX < I.x)
+        if(Math.abs(I.startX - I.x) < 11)
             I.startX = I.x;
+        else{
+            if(I.startX < I.x)
+                I.startX += 20;
+            else if(I.startX > I.x)
+                I.startX -= 20;
+        }
 
-        if(I.startY != I.y)
-            I.startY -= 20;
-
-        if(I.startY < I.y)
+        if(Math.abs(I.startY - I.y) < 11)
             I.startY = I.y;
+        else{
+            if(I.startY < I.y)
+                I.startY += 20;
+            else if(I.startY > I.y)
+                I.startY -= 20;
+        }
 
-	    canvas.fillStyle = this.color;
-        canvas.drawImage(this.img, this.startX,this.startY);
-	    //canvas.fillRect(this.x, this.y, this.width, this.height);
+        if(inBook){
+            I.plus.draw();
+            I.minus.draw();
+        }
+
+        canvas.drawImage(I.img, I.startX, I.startY);
 	    canvas.fillStyle = "#000";
         canvas.font = "20px sans-serif";
-	    //canvas.fillText(element, this.x, this.y+(this.height/2)+8);
-	  	canvas.fillText(this.number.toString()+"x", this.startX, this.startY+this.height);
+	  	canvas.fillText(I.number.toString()+"x", I.startX, I.startY+I.height);
 	  };
 
 	  I.update = function() {
@@ -369,35 +510,40 @@ $(document).ready(function() {
 	};
 
     //creating the spells
-	function CreateElement (element, number, x, y, startX, startY,  img) {
-		var tempElem = Element(tempElem, element, number, x, y, startX, startY, img);
+	function CreateElement (element, number, x, y, startX, startY,  img, inBook) {
+		var tempElem = Element(tempElem, element, number, x, y, startX, startY, img, inBook);
 		return tempElem;
 	}
 
-	allElements.push(CreateElement("Fire", 1, 90, 365, 90, 365, fire));
-	allElements.push(CreateElement("Fire", 5, 160, 365, 160, 365, fire));
-	allElements.push(CreateElement("Fire", 10, 230, 365, 230, 365, fire));
+	allElements.push(CreateElement("Fire", 1, 90, 355, 90, 355, fire, true));
+	allElements.push(CreateElement("Fire", 5, 160, 355, 160, 355, fire, true));
+	allElements.push(CreateElement("Fire", 10, 230, 355, 230, 355, fire, true));
 
-	allElements.push(CreateElement("Wind", 1, 90, 465, 90, 465, wind));
-	allElements.push(CreateElement("Wind", 5, 160, 465,  160, 465, wind));
-	allElements.push(CreateElement("Wind", 10, 230, 465, 230, 465, wind));
+	allElements.push(CreateElement("Wind", 1, 90, 455, 90, 455, wind, true));
+	allElements.push(CreateElement("Wind", 5, 160, 455,  160, 455, wind, true));
+	allElements.push(CreateElement("Wind", 10, 230, 455, 230, 455, wind, true));
 
-	allElements.push(CreateElement("Water", 1, 315, 365, 315, 365, water));
-	allElements.push(CreateElement("Water", 5, 385, 365, 385, 365, water));
-	allElements.push(CreateElement("Water", 10, 455, 365, 455, 365, water));
+	allElements.push(CreateElement("Water", 1, 315, 355, 315, 355, water, true));
+	allElements.push(CreateElement("Water", 5, 385, 355, 385, 355, water, true));
+	allElements.push(CreateElement("Water", 10, 455, 355, 455, 355, water, true));
 
-	allElements.push(CreateElement("Earth", 1, 315, 465, 315, 465, earth));
-	allElements.push(CreateElement("Earth", 5, 385, 465, 385, 465, earth));
-	allElements.push(CreateElement("Earth", 10, 455, 465, 455, 465, earth));
+	allElements.push(CreateElement("Earth", 1, 315, 455, 315, 455, earth, true));
+	allElements.push(CreateElement("Earth", 5, 385, 455, 385, 455, earth, true));
+	allElements.push(CreateElement("Earth", 10, 455, 455, 455, 455, earth, true));
 
     //This is where the game will generate a new spell recipes
 	function GenerateNewRecipe(){
         currentRecipe['Damage'] = 1;
-        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 0, 0, 600, 0, fire);
-        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 50,0, 700, 0, earth);
-        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 100,0, 800, 0, wind);
-        console.log(Object.keys(currentRecipe));
+
+        var temp = Math.floor(Math.random()*4);
+
+        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430, 0, -50, 0, fire, false);
+        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 380, 0, -150, 0, earth, false);
+        currentRecipe['Wind'] = CreateElement("Wind", randNumber(), 330, 0, -250, 0, wind, false);
+        currentRecipe['Water'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, water, false);
 	}
+
+
 
     function RecipeInPlace(){
         var inP = false;
@@ -420,12 +566,18 @@ $(document).ready(function() {
         }
     }
 
+    function CheckCurrentSpell(obj){
+        for (var k in obj){ // Loop through the object
+            if(obj[k].number <= 0)
+                delete obj[k];  // Delete obj[key];
+        }
+    }
+
 	function update() {
         if(startTimer){
             if(frameCount % 30 == 0){
                 timer--;
                 frameCount = 0;
-                console.log(timer);
             }
 
             if(timer == 0){
@@ -435,11 +587,22 @@ $(document).ready(function() {
             frameCount++;
         }
 
+        if(curGems.length>0){
+            var noMoreGems = CheckGems();
+            //console.log("checking gems = " + noMoreGems);
+            if(noMoreGems){
+                curEnemy.isDead = true;
+                console.log("resetting gems");
+                curGems = [];
+            }
+        }
+        
 		switch(curGameState){
 			case (gameState.StartBattle):
-				//some logic in here to create the monster
-                if(curEnemy == null)
+                if(curEnemy == null){
+                    //ogreSound.play();
                     curEnemy = Enemy();
+                }
 
                 if(curEnemy.inPlace()){
                     curGameState = gameState.InBattle;
@@ -457,7 +620,7 @@ $(document).ready(function() {
                         if(Object.keys(currentRecipe).length == 0)
 						  GenerateNewRecipe();
                         //ClearCurrentSpell(currentRecipe);
-                        console.log("setting to creating spell");
+                        //console.log("setting to creating spell");
                         if(RecipeInPlace()){
                             startTimer = true;
                             curBattleState = battleState.CreatingSpell;
@@ -465,6 +628,7 @@ $(document).ready(function() {
                         //console.log("new spell");
 					break;
 					case(battleState.CreatingSpell):
+                        CheckCurrentSpell(currentSpell);
                         //logic for players to do what they want with the elements
                         //console.log("creating spell");
 					break;
@@ -496,6 +660,8 @@ $(document).ready(function() {
         canvas.drawImage(bg,0,0);
         
 		player.draw();
+        staticGem.draw();
+
         if(curEnemy != null)
 		  curEnemy.draw();
 
@@ -515,15 +681,15 @@ $(document).ready(function() {
                     if(RecipeInPlace()){    
                         canvas.fillStyle = "#000";
                         canvas.font = "20px sans-serif";  
-                        canvas.fillText("= "+currentRecipe[k] + " damage", 160, 30);
+                        canvas.fillText("= "+currentRecipe[k] + " Damage", 485, 30);
                     }
                 }
             }
         }
 
         if(startTimer){
-            var centerX = 540;
-            var centerY = 50;
+            var centerX = 50;
+            var centerY = 95;
             var radius = 30;
 
             canvas.beginPath();
@@ -540,7 +706,7 @@ $(document).ready(function() {
 
             canvas.fillStyle = "#000";
             canvas.font = "30px sans-serif";  
-            canvas.fillText(timer.toString(), 525, 60);
+            canvas.fillText(timer.toString(), 35, 105);
         }
 
         for(var s in currentSpell){
@@ -550,8 +716,13 @@ $(document).ready(function() {
 		allElements.forEach(function(ele) {
 			ele.draw();
 		});
-	}
 
+        if(curGems.length > 0){
+            curGems.forEach(function(g) {
+                g.draw();
+            });
+        }
+	}
 
 	$('#myCanvas').click(function (e) {
 	    var clickedX = e.pageX - this.offsetLeft;
@@ -573,22 +744,30 @@ $(document).ready(function() {
 
         if(curBattleState == battleState.CreatingSpell){
     	    allElements.forEach(function(selEle) {
-    			if (clickedX < (selEle.x+selEle.width) && clickedX > selEle.x && clickedY > selEle.y && clickedY < (selEle.y+selEle.height)) {
+    			if (clickedX < (selEle.plus.x+selEle.plus.width) && clickedX > selEle.plus.x && clickedY > selEle.plus.y && clickedY < (selEle.plus.y+selEle.plus.height)) {
 	                var found = false;
                     for (var k in currentSpell){
-                        if(k == selEle.element)
+                        if(k == selEle.plus.element)
                         {
                             found = true;
-                            currentSpell[k].number += selEle.number;
+                            currentSpell[k].number += selEle.plus.number;
                         }
                     }
 
                     if(!found){
-                        currentSpell[selEle.element] = CreateElement(selEle.element, selEle.number, Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img);
+                        currentSpell[selEle.plus.element] = CreateElement(selEle.plus.element, selEle.plus.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img, false);
                     }
-
-                    console.log(Object.keys(currentSpell));
     		    }
+                
+                if (clickedX < (selEle.minus.x+selEle.minus.width) && clickedX > selEle.minus.x && clickedY > selEle.minus.y && clickedY < (selEle.minus.y+selEle.minus.height)) {
+                    for (var k in currentSpell){
+                        if(k == selEle.minus.element)
+                        {
+                            found = true;
+                            currentSpell[k].number += selEle.minus.number;
+                        }
+                    }
+                }
     		});
         }
 	});

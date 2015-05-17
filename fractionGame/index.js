@@ -15,43 +15,62 @@ $(document).ready(function() {
 */
 	var CANVAS_WIDTH = 800;
 	var CANVAS_HEIGHT = 400;
-	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "' style='border:1px solid #FF6F59;  padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;'></canvas>");
+	var canvasElement = $("<canvas id = 'myCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "' style='border:30px double #000000;  padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;'></canvas>");
 	canvas = canvasElement.get(0).getContext("2d");
 	canvasElement.appendTo('#canDiv');
 
 	//How many frames per second we are trying to run
 	var FPS = 30;
 
-		//this is how the game will run; running update and draw every "frame"
-	/*setInterval(function() {
-		update();
+	//this is how the game will run; running update and draw every "frame"
+	setInterval(function() {
 		draw();
 	}, 1000/FPS);
-*/
+
 	var bolt = new Image();
-	bolt.src = "/images/bolt.png";
+	bolt.src = './images/bolt.png';
 
 	var scroll = new Image();
-	scroll.src = "/images/scroll.png";
+	scroll.src = './images/scroll.png';
 
-	boltPath = {
+	var gem = new Image();
+	gem.src = './images/gem.png';
 
-		startX: 350,
-		startY: 200,
-		draw: function() {
-			if(this.x < this.startX)
-					this.startX -= 20;
+	var wizard = new Image();
+	wizard.src = './images/wizard.png';
 
-			if(this.y < this.startY)
-					this.startY -= 20;
+	var brace = new Image();
+	brace.src = './images/brace.png';
 
-		canvas.fillStyle = this.color;
-			canvas.drawImage(this.img, this.startX,this.startY);
-		}
+	var boltPath;
+
+	function Bolt(I, x, y){
+	  I = I || {};
+
+	  I.x = x;
+	  I.y = y;
+
+      I.startX = 625;
+      I.startY = 0;
+
+
+	  I.draw = function() {
+		if(this.x > this.startX)
+			this.startX += 20;
+
+		if(this.y > this.startY)
+			this.startY += 20;
+
+		canvas.drawImage(bolt, this.startX,this.startY);
+	  };
+
+	  return I;
+	}
+
+	function CreateBolt(i){
+
 	}
 	//var canvas = c.getContext("2d");
-	canvas.fillStyle = "#FF6F59";
-	canvas.fillRect(0,0,800,400);
 
 	/* Answer Squares
 	canvas.fillStyle = "#87E5BB"
@@ -77,11 +96,12 @@ $(document).ready(function() {
 			gradient.addColorStop("0.58","#FFFFFF");
 
 			canvas.fillStyle = gradient;
-			canvas.fillText("Score: " + num ,350,50);
+			canvas.fillText("Score: " + num*10 ,350,50);
+			canvas.drawImage(gem, 300, 15);
+			canvas.drawImage(wizard, 350, 140);
+			canvas.drawImage(brace, 150, 70);
 		}
 	}
-
-	updateScore.draw(0);
 
 	firstHeart = {
 
@@ -98,7 +118,6 @@ $(document).ready(function() {
 			canvas.fill();
 		}
 	}
-	firstHeart.draw("#DD2525");
 
 	secondHeart = {
 
@@ -116,7 +135,6 @@ $(document).ready(function() {
 
 		}
 	}
-	secondHeart.draw("#DD2525");
 
 	thirdHeart = {
 
@@ -134,7 +152,7 @@ $(document).ready(function() {
 
 		}
 	}
-	thirdHeart.draw("#DD2525");
+
 
 
 
@@ -142,9 +160,9 @@ $(document).ready(function() {
 	//var canvas = document.getElementById("myCanvas");
 
 	topButton = {
-		/*color: "#87E5BB",
+		//color: "#87E5BB",
 		width: 100,
-		height: 100,*/
+		height: 100,
 		x: 680,
 		y: 30,
 		draw: function() {
@@ -153,35 +171,79 @@ $(document).ready(function() {
 			canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
-	topButton.draw();
+
 
 	middleButton = {
-		color: "#87E5BB",
+		//color: "#87E5BB",
 		width: 100,
 		height: 100,
 		x: 680,
 		y: 150,
 		draw: function() {
-				canvas.fillStyle = this.color;
-				canvas.fillRect(this.x, this.y, this.width, this.height);
+				//canvas.fillStyle = this.color;
+				//canvas.fillRect(this.x, this.y, this.width, this.height);
+				canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
-	middleButton.draw();
+
 
 	bottomButton = {
-		color: "#87E5BB",
+		//color: "#87E5BB",
 		width: 100,
 		height: 100,
 		x: 680,
 		y: 270,
 		draw: function() {
-				canvas.fillStyle = this.color;
-				canvas.fillRect(this.x, this.y, this.width, this.height);
+				//canvas.fillStyle = this.color;
+				//canvas.fillRect(this.x, this.y, this.width, this.height);
+				canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
-	bottomButton.draw();
 
 
+	function draw() {
+		canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+		canvas.fillStyle = "#FF6F59";
+		canvas.fillRect(0,0,800,400);
+
+		if(boltPath != null)
+			boltPath.draw();
+
+		updateScore.draw(0);
+
+		switch(getLives()) {
+	    case 3:
+	        firstHeart.draw("#DD2525");
+			secondHeart.draw("#DD2525");
+			thirdHeart.draw("#DD2525");
+	        break;
+	    case 2:
+	    	firstHeart.draw("#DD2525");
+			secondHeart.draw("#DD2525");
+	        thirdHeart.draw("#254441");
+	        break;
+	    case 1:
+	    	firstHeart.draw("#DD2525");
+	        secondHeart.draw("#254441");
+	       	thirdHeart.draw("#254441");
+	        break;
+	    case 0:
+	    	firstHeart.draw("#254441");
+	    	secondHeart.draw("#254441");
+	       	thirdHeart.draw("#254441");
+	        break;
+	    default:
+    		break;
+		}//end switch
+
+
+
+		topButton.draw();
+		middleButton.draw();
+		bottomButton.draw();
+
+		drawAnswers();
+	}
 
 	// Answer Text
 	canvas.fillStyle = "#254441"
