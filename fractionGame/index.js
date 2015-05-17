@@ -49,32 +49,37 @@ $(document).ready(function() {
 
 	var boltPath;
 
-	function Bolt(I, x, y){
+	function Bolt(I, x, y, answer){
 	  I = I || {};
 
 	  I.x = x;
 	  I.y = y;
-
-      I.startX = 625;
-      I.startY = 0;
+		I.speed = 20;
+    I.startX = 400;
+    I.startY = 100;
 
 
 	  I.draw = function() {
-		if(this.x > this.startX)
-			this.startX += 20;
+			if(I.startX < I.x)
+					I.startX += I.speed;
+			else if(I.startX > I.x)
+					I.startX -= I.speed;
 
-		if(this.y > this.startY)
-			this.startY += 20;
+			if(Math.abs(I.startY - I.y) < 11 && Math.abs(I.startX - I.x) < 11){
+				checkAnswer(answer);
+				boltPath = undefined;
+			}
 
+			if(I.startY < I.y)
+					I.startY += I.speed-5;
+			else if(I.startY > I.y)
+					I.startY -= I.speed-(Math.random()*3+2);
 		canvas.drawImage(bolt, this.startX,this.startY);
 	  };
 
 	  return I;
 	}
 
-	function CreateBolt(i){
-
-	}
 	//var canvas = c.getContext("2d");
 
 	/* Answer Squares
@@ -285,6 +290,7 @@ $(document).ready(function() {
 		bottomButton.draw();
 
 		drawAnswers();
+
 	}
 
 	// Answer Text
@@ -301,14 +307,26 @@ $(document).ready(function() {
 	$('#myCanvas').click(function (e) {
 		var clickedX = e.pageX - this.offsetLeft;
 	  var clickedY = e.pageY - this.offsetTop;
+		var startX = 400;
+		var startY = 100;
+		var x ;
+		var y ;
+
 	  if (clickedX < (topButton.x+topButton.width) && clickedX > topButton.x && clickedY > topButton.y && clickedY < ((topButton).y+topButton.height)) {
-	        checkAnswer(0);
+				if(boltPath == null)
+					boltPath = Bolt(boltPath, topButton.x + topButton.width/2, topButton.y + topButton.height/2 - 50, 0);
+					//checkAnswer(0);
+
 	  }
 		if (clickedX < (middleButton.x+middleButton.width) && clickedX > middleButton.x && clickedY > middleButton.y && clickedY < (middleButton.y+middleButton.height)) {
-	        checkAnswer(1);
+			if(boltPath == null)
+				boltPath = Bolt(boltPath, middleButton.x + middleButton.width/2 - 50, middleButton.y + middleButton.height/2 - 50, 1);
+				// checkAnswer(1);
 	  }
 		if (clickedX < (bottomButton.x+bottomButton.width) && clickedX > bottomButton.x && clickedY > bottomButton.y && clickedY < (bottomButton.y+bottomButton.height)) {
-	        checkAnswer(2);
+			if(boltPath == null)
+				boltPath = Bolt(boltPath, bottomButton.x + bottomButton.width/2 - 90, bottomButton.y + bottomButton.height/2 - 50, 2);
+					//checkAnswer(2);
 	  }
 
 
