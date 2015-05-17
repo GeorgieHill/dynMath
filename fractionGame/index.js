@@ -34,6 +34,9 @@ $(document).ready(function() {
 	var scroll = new Image();
 	scroll.src = './images/scroll.png';
 
+	var gem = new Image();
+	gem.src = './images/gem.png';
+
 	boltPath = {
 
 		startX: 350,
@@ -78,6 +81,7 @@ $(document).ready(function() {
 
 			canvas.fillStyle = gradient;
 			canvas.fillText("Score: " + num ,350,50);
+			canvas.drawImage(gem, 300, 20);
 		}
 	}
 
