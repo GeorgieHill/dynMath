@@ -22,10 +22,14 @@ $(document).ready(function() {
 
 	//How many frames per second we are trying to run
 	var FPS = 30;
+	var timer = 20;
+	var frameCount = 0;
+	var startTimer = true;
 
 	//this is how the game will run; running update and draw every "frame"
 	setInterval(function() {
 		draw();
+		update();
 	}, 1000/FPS);
 
 	var bolt = new Image();
@@ -201,6 +205,22 @@ $(document).ready(function() {
 		}
 	};
 
+	function update() {
+
+		if(startTimer){
+				if(frameCount % 30 == 0){
+						timer--;
+						frameCount = 0;
+				}
+
+				if(timer == 0){
+						curBattleState = battleState.DamagePlayer;
+				}
+
+				frameCount++;
+		}
+
+	}
 
 	function draw() {
 		canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -237,7 +257,27 @@ $(document).ready(function() {
     		break;
 		}//end switch
 
+		if(startTimer){
+				var centerX = 380;
+				var centerY = 340;
+				var radius = 30;
 
+				canvas.beginPath();
+				canvas.arc(centerX, centerY, radius, 0, 2 * Math.PI * (timer/20), false);
+				//canvas.fillStyle = 'green';
+				//canvas.fill();
+				canvas.lineWidth = 23;
+				if(timer > 10)
+						canvas.strokeStyle = 'green';
+				else
+						canvas.strokeStyle = 'red';
+
+				canvas.stroke();
+
+				canvas.fillStyle = "#000";
+				canvas.font = "30px sans-serif";
+				canvas.fillText(timer.toString(), 363, 350);
+		}
 
 		topButton.draw();
 		middleButton.draw();
