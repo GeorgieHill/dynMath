@@ -7,7 +7,7 @@
     margin-right: auto;
     font-family: Latio;
     height: auto;
-    width: auto;
+    width: 100%;
  
        background: black;
 }
@@ -57,14 +57,15 @@ p {
 }
 #nav{
     
-   width: 300px;
-    height: 50px; 
+   width: 150px;
+    height: 25px; 
     background: black;
     padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
-
+   margin: auto;
 }
+
 #nav table {
-   padding-left: 0; padding-right: 0; margin-left: auto; margin-right: 5; display: block;
+   padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
 
 }
 #nav td{
