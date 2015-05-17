@@ -42,6 +42,8 @@ $(document).ready(function() {
     var ogreImg = new Image();
     ogreImg.src = './img/ogre.png';
 
+    var gemImg = new Image();
+    gemImg.src = './img/gem.png';
 	//How many frames per second we are trying to run
 	var FPS = 30;
     var frameCount = 0;
@@ -80,6 +82,8 @@ $(document).ready(function() {
     //current elements on screen
   	var curElements = [];
 
+    var curGems = [];
+
     //player information
 	var player = {
 	  color: "#00A",
@@ -114,6 +118,18 @@ $(document).ready(function() {
       }
 	};
 
+    var staticGem = {
+        gemCount: 0,
+        x: 0,
+        y: 0,
+        draw: function() {
+          canvas.fillStyle = this.color;
+          canvas.drawImage(gemImg, this.x, this.y);
+          canvas.fillStyle = "#000";
+          canvas.font = "40px sans-serif";
+          canvas.fillText(this.gemCount.toString(), this.x+40, this.y+35);
+        }
+    }
     //enemy information
 	function Enemy(I){
 	  I = I || {};
@@ -185,6 +201,69 @@ $(document).ready(function() {
 	  return I;
 	}
 
+    function Gem(I) {
+      I = I || {};
+
+      I.x = 0;
+      I.y = 0;
+      I.startX = 350 + Math.random() * 50;
+      I.startY = 175 + Math.random() * 128;
+      I.speed = (Math.random() * 7) + 8;
+      I.inPlace = false;
+      I.addedScore = false;
+
+      I.draw = function() {
+        if(I.startX < I.x)
+            I.startX += I.speed;
+        else if(I.startX > I.x)
+            I.startX -= I.speed;
+        
+        if(Math.abs(I.startY - I.y) < 11 && Math.abs(I.startX - I.x) < 11){
+            if(!I.addedScore){
+                staticGem.gemCount += 10;
+                I.addedScore = true;
+            }
+        }
+
+        if(Math.abs(I.startY - I.y) < 8 && Math.abs(I.startX - I.x) < 8){
+            I.startX = I.x;
+            I.startY = I.y;
+            I.inPlace = true;
+        }
+
+        if(I.startY < I.y)
+            I.startY += I.speed-5;
+        else if(I.startY > I.y)
+            I.startY -= I.speed-(Math.random()*3+2);
+
+        canvas.drawImage(gemImg, I.startX, I.startY);
+      };
+
+      I.update = function() {
+      };
+
+      return I;
+    };
+
+    function CreateGems(amount){
+        for(var i = 0; i < amount; i++){
+            curGems.push(Gem());
+        }
+    }
+
+    function CheckGems(){
+        var inP = true;
+
+        curGems.forEach(function(g) {
+            inP = g.inPlace;
+            if(!inP)
+                return inP;
+        });
+
+        console.log("checkgems : " + inP);
+        return inP;
+    }
+
 	var curEnemy;// = Enemy();
 
     //this is the temp bookImg object
@@ -201,7 +280,7 @@ $(document).ready(function() {
 		}
 	};
 
-    //button to turn page left
+    //cast the spell!
     var castButton = {
         color: "#AAA",
         width: 150,
@@ -330,25 +409,30 @@ $(document).ready(function() {
 	  I.height = 60;
 
 	  I.draw = function() {
-        if(I.startX != I.x)
-            I.startX -= 20;
-
-        if(I.startX < I.x)
+        if(Math.abs(I.startX - I.x) < 11)
             I.startX = I.x;
+        else{
+            if(I.startX < I.x)
+                I.startX += 20;
+            else if(I.startX > I.x)
+                I.startX -= 20;
+        }
 
-        if(I.startY != I.y)
-            I.startY -= 20;
-
-        if(I.startY < I.y)
+        if(Math.abs(I.startY - I.y) < 11)
             I.startY = I.y;
+        else{
+            if(I.startY < I.y)
+                I.startY += 20;
+            else if(I.startY > I.y)
+                I.startY -= 20;
+        }
 
-	    canvas.fillStyle = this.color;
-        canvas.drawImage(this.img, this.startX,this.startY);
+        canvas.drawImage(I.img, I.startX, I.startY);
 	    //canvas.fillRect(this.x, this.y, this.width, this.height);
 	    canvas.fillStyle = "#000";
         canvas.font = "20px sans-serif";
 	    //canvas.fillText(element, this.x, this.y+(this.height/2)+8);
-	  	canvas.fillText(this.number.toString()+"x", this.startX, this.startY+this.height);
+	  	canvas.fillText(I.number.toString()+"x", I.startX, I.startY+I.height);
 	  };
 
 	  I.update = function() {
@@ -393,10 +477,9 @@ $(document).ready(function() {
     //This is where the game will generate a new spell recipes
 	function GenerateNewRecipe(){
         currentRecipe['Damage'] = 1;
-        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 0, 0, 600, 0, fire);
-        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 50,0, 700, 0, earth);
-        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 100,0, 800, 0, wind);
-        console.log(Object.keys(currentRecipe));
+        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430, 0, -50, 0, fire);
+        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 380, 0, -150, 0, earth);
+        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, wind);
 	}
 
     function RecipeInPlace(){
@@ -425,7 +508,6 @@ $(document).ready(function() {
             if(frameCount % 30 == 0){
                 timer--;
                 frameCount = 0;
-                console.log(timer);
             }
 
             if(timer == 0){
@@ -435,13 +517,22 @@ $(document).ready(function() {
             frameCount++;
         }
 
+        if(curGems.length>0){
+            var noMoreGems = CheckGems();
+            console.log("checking gems = " + noMoreGems);
+            if(noMoreGems){
+                console.log("resetting gems");
+                curGems = [];
+            }
+        }
+        
 		switch(curGameState){
 			case (gameState.StartBattle):
-				//some logic in here to create the monster
                 if(curEnemy == null)
                     curEnemy = Enemy();
 
                 if(curEnemy.inPlace()){
+                    CreateGems(10);
                     curGameState = gameState.InBattle;
                     curBattleState = battleState.NewSpell;
                     timer = 30;
@@ -496,6 +587,8 @@ $(document).ready(function() {
         canvas.drawImage(bg,0,0);
         
 		player.draw();
+        staticGem.draw();
+
         if(curEnemy != null)
 		  curEnemy.draw();
 
@@ -515,15 +608,15 @@ $(document).ready(function() {
                     if(RecipeInPlace()){    
                         canvas.fillStyle = "#000";
                         canvas.font = "20px sans-serif";  
-                        canvas.fillText("= "+currentRecipe[k] + " damage", 160, 30);
+                        canvas.fillText("= "+currentRecipe[k] + " Damage", 485, 30);
                     }
                 }
             }
         }
 
         if(startTimer){
-            var centerX = 540;
-            var centerY = 50;
+            var centerX = 50;
+            var centerY = 95;
             var radius = 30;
 
             canvas.beginPath();
@@ -540,7 +633,7 @@ $(document).ready(function() {
 
             canvas.fillStyle = "#000";
             canvas.font = "30px sans-serif";  
-            canvas.fillText(timer.toString(), 525, 60);
+            canvas.fillText(timer.toString(), 35, 105);
         }
 
         for(var s in currentSpell){
@@ -550,8 +643,13 @@ $(document).ready(function() {
 		allElements.forEach(function(ele) {
 			ele.draw();
 		});
-	}
 
+        if(curGems.length > 0){
+            curGems.forEach(function(g) {
+                g.draw();
+            });
+        }
+	}
 
 	$('#myCanvas').click(function (e) {
 	    var clickedX = e.pageX - this.offsetLeft;
@@ -584,7 +682,7 @@ $(document).ready(function() {
                     }
 
                     if(!found){
-                        currentSpell[selEle.element] = CreateElement(selEle.element, selEle.number, Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img);
+                        currentSpell[selEle.element] = CreateElement(selEle.element, selEle.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img);
                     }
 
                     console.log(Object.keys(currentSpell));
