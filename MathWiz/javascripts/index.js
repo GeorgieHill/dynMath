@@ -44,6 +44,10 @@ $(document).ready(function() {
 
     var gemImg = new Image();
     gemImg.src = './img/gem.png';
+
+    var ogreSound = new Audio('./sound/ogre.wav');
+    var yaySound = new Audio('./sound/yay.mp3');
+
 	//How many frames per second we are trying to run
 	var FPS = 30;
     var frameCount = 0;
@@ -113,6 +117,7 @@ $(document).ready(function() {
             curEnemy = undefined;
         }
         else{
+            ClearCurrentSpell(currentSpell);
             curBattleState = battleState.CreatingSpell;
         }
       }
@@ -148,23 +153,35 @@ $(document).ready(function() {
 	  I.width = 64;
 	  I.height = 128;
 
+      I.dead = false;
+
 	  I.draw = function() {
-        if(I.startX != I.x)
-            I.startX -= 20;
+        if(I.isDead){
+            I.startX -= 10;
 
-        if(I.startX < I.x)
-            I.startX = I.x;
+            if(I.startX < -100){
+                curGameState = gameState.EndBattle;
+                curEnemy = undefined;
+            }
+        }
+        else{
+            if(I.startX != I.x)
+                I.startX -= 20;
 
-        if(I.startY != I.y)
-            I.startY += 20;
+            if(I.startX < I.x)
+                I.startX = I.x;
 
-        if(I.startY > I.y)
-            I.startY = I.y;
+            if(I.startY != I.y)
+                I.startY += 20;
+
+            if(I.startY > I.y)
+                I.startY = I.y;
+        }
 
 	    canvas.fillStyle = this.color;
         canvas.drawImage(ogreImg, this.startX, this.startY);
 		//canvas.fillRect(this.x-(this.width/2), this.y-(this.height/2), this.width, this.height);
-        if(I.inPlace()){
+        if(I.inPlace() && I.curHealth > 0){
 	      canvas.fillStyle = "#000";
           canvas.font = "20px sans-serif";
 	  	  canvas.fillText(this.curHealth.toString() + "/" + this.maxHealth.toString(), this.x, this.y+this.height+15);
@@ -181,10 +198,9 @@ $(document).ready(function() {
         if(I.curHealth <= 0){
             ClearCurrentSpell(currentRecipe);
             ClearCurrentSpell(currentSpell);
-            curGameState = gameState.EndBattle;
             CreateGems(I.maxHealth);
+            //yaySound.play();
             startTimer = false;
-            curEnemy = undefined;
         }
         else{
             ClearCurrentSpell(currentSpell);
@@ -288,7 +304,7 @@ $(document).ready(function() {
         width: 150,
         height: 50,
         x: 225,
-        y: 275,
+        y: 140,
         draw: function() {
             canvas.fillStyle = this.color;
             canvas.fillRect(this.x, this.y, this.width, this.height);
@@ -518,10 +534,16 @@ $(document).ready(function() {
     //This is where the game will generate a new spell recipes
 	function GenerateNewRecipe(){
         currentRecipe['Damage'] = 1;
+
+        var temp = Math.floor(Math.random()*4);
+
         currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430, 0, -50, 0, fire, false);
         currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 380, 0, -150, 0, earth, false);
-        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, wind, false);
+        currentRecipe['Wind'] = CreateElement("Wind", randNumber(), 330, 0, -250, 0, wind, false);
+        currentRecipe['Water'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, water, false);
 	}
+
+
 
     function RecipeInPlace(){
         var inP = false;
@@ -544,6 +566,13 @@ $(document).ready(function() {
         }
     }
 
+    function CheckCurrentSpell(obj){
+        for (var k in obj){ // Loop through the object
+            if(obj[k].number <= 0)
+                delete obj[k];  // Delete obj[key];
+        }
+    }
+
 	function update() {
         if(startTimer){
             if(frameCount % 30 == 0){
@@ -562,6 +591,7 @@ $(document).ready(function() {
             var noMoreGems = CheckGems();
             //console.log("checking gems = " + noMoreGems);
             if(noMoreGems){
+                curEnemy.isDead = true;
                 console.log("resetting gems");
                 curGems = [];
             }
@@ -569,8 +599,10 @@ $(document).ready(function() {
         
 		switch(curGameState){
 			case (gameState.StartBattle):
-                if(curEnemy == null)
+                if(curEnemy == null){
+                    //ogreSound.play();
                     curEnemy = Enemy();
+                }
 
                 if(curEnemy.inPlace()){
                     curGameState = gameState.InBattle;
@@ -596,6 +628,7 @@ $(document).ready(function() {
                         //console.log("new spell");
 					break;
 					case(battleState.CreatingSpell):
+                        CheckCurrentSpell(currentSpell);
                         //logic for players to do what they want with the elements
                         //console.log("creating spell");
 					break;
@@ -727,17 +760,12 @@ $(document).ready(function() {
     		    }
                 
                 if (clickedX < (selEle.minus.x+selEle.minus.width) && clickedX > selEle.minus.x && clickedY > selEle.minus.y && clickedY < (selEle.minus.y+selEle.minus.height)) {
-                    var found = false;
                     for (var k in currentSpell){
                         if(k == selEle.minus.element)
                         {
                             found = true;
                             currentSpell[k].number += selEle.minus.number;
                         }
-                    }
-
-                    if(!found){
-                        currentSpell[selEle.minus.element] = CreateElement(selEle.minus.element, -selEle.minus.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img, false);
                     }
                 }
     		});
