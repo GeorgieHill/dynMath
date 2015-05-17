@@ -182,6 +182,7 @@ $(document).ready(function() {
             ClearCurrentSpell(currentRecipe);
             ClearCurrentSpell(currentSpell);
             curGameState = gameState.EndBattle;
+            CreateGems(I.maxHealth);
             startTimer = false;
             curEnemy = undefined;
         }
@@ -252,16 +253,17 @@ $(document).ready(function() {
     }
 
     function CheckGems(){
-        var inP = true;
+        var rightCount = 0;
 
         curGems.forEach(function(g) {
-            inP = g.inPlace;
-            if(!inP)
-                return inP;
+            if(g.inPlace)
+                rightCount++;
         });
 
-        console.log("checkgems : " + inP);
-        return inP;
+        if(rightCount == curGems.length)
+            return true;
+        else
+            return false;
     }
 
 	var curEnemy;// = Enemy();
@@ -391,8 +393,39 @@ $(document).ready(function() {
 
     var spellScale = 1;
 
+    function PlusMinus(I, element, number, x, y) {
+      I = I || {};
+
+      I.element = element;
+      I.number = number;
+
+      I.color = "#000";
+
+      I.x = x;
+      I.y = y;
+
+      I.width = 23;
+      I.height = 23;
+
+      I.draw = function() {
+        canvas.fillStyle = I.color;
+        canvas.fillRect(this.x, this.y, this.width, this.height);
+        canvas.fillStyle = "#FFF";
+
+        var sign = "+";
+        if(number < 0)
+            sign = "-";
+
+        canvas.font = "20px sans-serif";
+        canvas.fillText(sign, this.x+8, this.y+18);
+        //canvas.fillText(I.number.toString()+"x", I.startX, I.startY+I.height);
+      };
+
+      return I;
+    };
+
     //constructor for all the elements
-	function Element(I, element, number, x, y, startX, startY, img) {
+	function Element(I, element, number, x, y, startX, startY, img, inBook) {
 	  I = I || {};
 
 	  I.element = element;
@@ -404,6 +437,11 @@ $(document).ready(function() {
 	  I.y = y;
       I.startX = startX;
       I.startY = startY;
+
+      if(inBook){
+          I.plus = PlusMinus(I.plus, I.element, I.number, I.x, I.y+65);
+          I.minus = PlusMinus(I.minus, I.element, -I.number, I.x+27, I.y+65);
+      }
 
 	  I.width = 60;
 	  I.height = 60;
@@ -427,11 +465,14 @@ $(document).ready(function() {
                 I.startY -= 20;
         }
 
+        if(inBook){
+            I.plus.draw();
+            I.minus.draw();
+        }
+
         canvas.drawImage(I.img, I.startX, I.startY);
-	    //canvas.fillRect(this.x, this.y, this.width, this.height);
 	    canvas.fillStyle = "#000";
         canvas.font = "20px sans-serif";
-	    //canvas.fillText(element, this.x, this.y+(this.height/2)+8);
 	  	canvas.fillText(I.number.toString()+"x", I.startX, I.startY+I.height);
 	  };
 
@@ -453,33 +494,33 @@ $(document).ready(function() {
 	};
 
     //creating the spells
-	function CreateElement (element, number, x, y, startX, startY,  img) {
-		var tempElem = Element(tempElem, element, number, x, y, startX, startY, img);
+	function CreateElement (element, number, x, y, startX, startY,  img, inBook) {
+		var tempElem = Element(tempElem, element, number, x, y, startX, startY, img, inBook);
 		return tempElem;
 	}
 
-	allElements.push(CreateElement("Fire", 1, 90, 365, 90, 365, fire));
-	allElements.push(CreateElement("Fire", 5, 160, 365, 160, 365, fire));
-	allElements.push(CreateElement("Fire", 10, 230, 365, 230, 365, fire));
+	allElements.push(CreateElement("Fire", 1, 90, 355, 90, 355, fire, true));
+	allElements.push(CreateElement("Fire", 5, 160, 355, 160, 355, fire, true));
+	allElements.push(CreateElement("Fire", 10, 230, 355, 230, 355, fire, true));
 
-	allElements.push(CreateElement("Wind", 1, 90, 465, 90, 465, wind));
-	allElements.push(CreateElement("Wind", 5, 160, 465,  160, 465, wind));
-	allElements.push(CreateElement("Wind", 10, 230, 465, 230, 465, wind));
+	allElements.push(CreateElement("Wind", 1, 90, 455, 90, 455, wind, true));
+	allElements.push(CreateElement("Wind", 5, 160, 455,  160, 455, wind, true));
+	allElements.push(CreateElement("Wind", 10, 230, 455, 230, 455, wind, true));
 
-	allElements.push(CreateElement("Water", 1, 315, 365, 315, 365, water));
-	allElements.push(CreateElement("Water", 5, 385, 365, 385, 365, water));
-	allElements.push(CreateElement("Water", 10, 455, 365, 455, 365, water));
+	allElements.push(CreateElement("Water", 1, 315, 355, 315, 355, water, true));
+	allElements.push(CreateElement("Water", 5, 385, 355, 385, 355, water, true));
+	allElements.push(CreateElement("Water", 10, 455, 355, 455, 355, water, true));
 
-	allElements.push(CreateElement("Earth", 1, 315, 465, 315, 465, earth));
-	allElements.push(CreateElement("Earth", 5, 385, 465, 385, 465, earth));
-	allElements.push(CreateElement("Earth", 10, 455, 465, 455, 465, earth));
+	allElements.push(CreateElement("Earth", 1, 315, 455, 315, 455, earth, true));
+	allElements.push(CreateElement("Earth", 5, 385, 455, 385, 455, earth, true));
+	allElements.push(CreateElement("Earth", 10, 455, 455, 455, 455, earth, true));
 
     //This is where the game will generate a new spell recipes
 	function GenerateNewRecipe(){
         currentRecipe['Damage'] = 1;
-        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430, 0, -50, 0, fire);
-        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 380, 0, -150, 0, earth);
-        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, wind);
+        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430, 0, -50, 0, fire, false);
+        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 380, 0, -150, 0, earth, false);
+        currentRecipe['Wind'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, wind, false);
 	}
 
     function RecipeInPlace(){
@@ -519,7 +560,7 @@ $(document).ready(function() {
 
         if(curGems.length>0){
             var noMoreGems = CheckGems();
-            console.log("checking gems = " + noMoreGems);
+            //console.log("checking gems = " + noMoreGems);
             if(noMoreGems){
                 console.log("resetting gems");
                 curGems = [];
@@ -532,7 +573,6 @@ $(document).ready(function() {
                     curEnemy = Enemy();
 
                 if(curEnemy.inPlace()){
-                    CreateGems(10);
                     curGameState = gameState.InBattle;
                     curBattleState = battleState.NewSpell;
                     timer = 30;
@@ -548,7 +588,7 @@ $(document).ready(function() {
                         if(Object.keys(currentRecipe).length == 0)
 						  GenerateNewRecipe();
                         //ClearCurrentSpell(currentRecipe);
-                        console.log("setting to creating spell");
+                        //console.log("setting to creating spell");
                         if(RecipeInPlace()){
                             startTimer = true;
                             curBattleState = battleState.CreatingSpell;
@@ -671,22 +711,35 @@ $(document).ready(function() {
 
         if(curBattleState == battleState.CreatingSpell){
     	    allElements.forEach(function(selEle) {
-    			if (clickedX < (selEle.x+selEle.width) && clickedX > selEle.x && clickedY > selEle.y && clickedY < (selEle.y+selEle.height)) {
+    			if (clickedX < (selEle.plus.x+selEle.plus.width) && clickedX > selEle.plus.x && clickedY > selEle.plus.y && clickedY < (selEle.plus.y+selEle.plus.height)) {
 	                var found = false;
                     for (var k in currentSpell){
-                        if(k == selEle.element)
+                        if(k == selEle.plus.element)
                         {
                             found = true;
-                            currentSpell[k].number += selEle.number;
+                            currentSpell[k].number += selEle.plus.number;
                         }
                     }
 
                     if(!found){
-                        currentSpell[selEle.element] = CreateElement(selEle.element, selEle.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img);
+                        currentSpell[selEle.plus.element] = CreateElement(selEle.plus.element, selEle.plus.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img, false);
+                    }
+    		    }
+                
+                if (clickedX < (selEle.minus.x+selEle.minus.width) && clickedX > selEle.minus.x && clickedY > selEle.minus.y && clickedY < (selEle.minus.y+selEle.minus.height)) {
+                    var found = false;
+                    for (var k in currentSpell){
+                        if(k == selEle.minus.element)
+                        {
+                            found = true;
+                            currentSpell[k].number += selEle.minus.number;
+                        }
                     }
 
-                    console.log(Object.keys(currentSpell));
-    		    }
+                    if(!found){
+                        currentSpell[selEle.minus.element] = CreateElement(selEle.minus.element, -selEle.minus.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img, false);
+                    }
+                }
     		});
         }
 	});
