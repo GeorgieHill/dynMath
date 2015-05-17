@@ -21,6 +21,7 @@ h1{
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding-box;
 	background-clip: padding-box;
+	padding-bottom: 10px;
 
 }
 
@@ -187,9 +188,9 @@ p{
     
 }
 #footer{
-	width: 255px;
-    height: 95px; 
-    background: black;
+	width: 130px;
+    height: 50px; 
+    background: rgb(49,53,61);
     padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
 }
 
