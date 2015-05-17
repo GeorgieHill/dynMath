@@ -45,6 +45,9 @@ $(document).ready(function() {
     var gemImg = new Image();
     gemImg.src = './img/gem.png';
 
+    var starImg = new Image();
+    starImg.src = './img/star25.png';
+
     var ogreSound = new Audio('./sound/ogre.wav');
     var yaySound = new Audio('./sound/yay.mp3');
 
@@ -52,7 +55,8 @@ $(document).ready(function() {
 	var FPS = 30;
     var frameCount = 0;
 
-    var timer = 30;
+    var maxTimer = 45;
+    var timer = maxTimer;
     var startTimer = false;
 
     //this is how the game will run; running update and draw every "frame"
@@ -283,6 +287,73 @@ $(document).ready(function() {
     }
 
 	var curEnemy;// = Enemy();
+
+    function Star(I) {
+      I = I || {};
+
+      I.x = 375 + Math.random()*50;
+      I.y = 150 + Math.random()*128;
+      I.startX = 200 + Math.random() * 20;
+      I.startY = 200 + Math.random() * 20;
+      I.speed = (Math.random() * 3) + 4;
+      I.inPlace = false;
+      I.didDamage = false;
+
+      I.draw = function() {
+        if(I.startX < I.x)
+            I.startX += I.speed;
+        else if(I.startX > I.x)
+            I.startX -= I.speed;
+        
+        if(Math.abs(I.startY - I.y) < 11 && Math.abs(I.startX - I.x) < 11){
+            if(!I.didDamage){
+                curEnemy.takeDamage(1);
+                I.didDamage = true;
+            }
+        }
+
+        if(Math.abs(I.startY - I.y) < 8 && Math.abs(I.startX - I.x) < 8){
+            I.startX = I.x;
+            I.startY = I.y;
+            I.inPlace = true;
+        }
+
+        if(I.startY < I.y)
+            I.startY += I.speed+(Math.random()*4+1);
+        else if(I.startY > I.y)
+            I.startY -= I.speed-(Math.random()*4+1);
+
+        canvas.drawImage(starImg, I.startX, I.startY);
+      };
+
+      I.update = function() {
+      };
+
+      return I;
+    };
+
+    var curStars = [];
+    var castStars = false;
+
+    function CreateStars(amount){
+        for(var i = 0; i < amount; i++){
+            curStars.push(Star());
+        }
+    }
+
+    function CheckStars(){
+        var rightCount = 0;
+
+        curStars.forEach(function(s) {
+            if(s.inPlace)
+                rightCount++;
+        });
+
+        if(rightCount == curStars.length)
+            return true;
+        else
+            return false;
+    }
 
     //this is the temp bookImg object
 	var book = {
@@ -531,19 +602,57 @@ $(document).ready(function() {
 	allElements.push(CreateElement("Earth", 5, 385, 455, 385, 455, earth, true));
 	allElements.push(CreateElement("Earth", 10, 455, 455, 455, 455, earth, true));
 
+    var spellements = ["Fire", "Earth", "Wind", "Water"];
     //This is where the game will generate a new spell recipes
 	function GenerateNewRecipe(){
-        currentRecipe['Damage'] = 1;
+        var tempDamage = Math.floor(Math.random()*5+1);
 
-        var temp = Math.floor(Math.random()*4);
+        while((curEnemy.maxHealth % tempDamage) != 0)
+            tempDamage = Math.floor(Math.random()*5+1);
 
-        currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430, 0, -50, 0, fire, false);
-        currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 380, 0, -150, 0, earth, false);
-        currentRecipe['Wind'] = CreateElement("Wind", randNumber(), 330, 0, -250, 0, wind, false);
-        currentRecipe['Water'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, water, false);
+        currentRecipe['Damage'] = tempDamage;
+
+        var tempEleArray = [];
+
+        tempEleArray.push(spellements[Math.floor(Math.random()*4)]);
+
+        var recipeElement = spellements[Math.floor(Math.random()*4)];
+        while(jQuery.inArray(recipeElement, tempEleArray) >= 0)
+            recipeElement = spellements[Math.floor(Math.random()*4)];
+
+
+        tempEleArray.push(recipeElement);
+
+        recipeElement = spellements[Math.floor(Math.random()*4)];
+        while(jQuery.inArray(recipeElement, tempEleArray) >= 0)
+            recipeElement = spellements[Math.floor(Math.random()*4)];
+
+        tempEleArray.push(recipeElement);
+
+        console.log(tempEleArray);
+
+        AddToRecipe(tempEleArray[0], 0);
+        AddToRecipe(tempEleArray[1], 1);
+        AddToRecipe(tempEleArray[2], 2);
+        //currentRecipe['Water'] = CreateElement("Water", randNumber(), 330, 0, -250, 0, water, false);
 	}
 
-
+    function AddToRecipe(type, i){
+        switch(type){
+            case "Fire":
+                currentRecipe['Fire'] = CreateElement("Fire", randNumber(), 430-60*i, 0, -50-100*i, 0, fire, false);
+            break;
+            case "Wind":
+                currentRecipe['Wind'] = CreateElement("Wind", randNumber(), 430-60*i, 0, -50-100*i, 0, wind, false);
+            break;
+            case "Earth":
+                currentRecipe['Earth'] = CreateElement("Earth", randNumber(), 430-60*i, 0, -50-100*i, 0, earth, false);
+            break;
+            case "Water":
+                currentRecipe['Water'] = CreateElement("Water", randNumber(), 430-60*i, 0, -50-100*i, 0, water, false);
+            break;
+        }
+    }
 
     function RecipeInPlace(){
         var inP = false;
@@ -597,6 +706,17 @@ $(document).ready(function() {
             }
         }
         
+
+        if(curStars.length>0){
+            var noMoreStars = CheckStars();
+            //console.log("checking Stars = " + noMoreStars);
+            if(noMoreStars){
+                console.log("resetting Stars");
+                //curBatt
+                curStars = [];
+            }
+        }
+
 		switch(curGameState){
 			case (gameState.StartBattle):
                 if(curEnemy == null){
@@ -607,7 +727,7 @@ $(document).ready(function() {
                 if(curEnemy.inPlace()){
                     curGameState = gameState.InBattle;
                     curBattleState = battleState.NewSpell;
-                    timer = 30;
+                    timer = maxTimer;
                     frameCount = 0;
                 } 
 
@@ -622,6 +742,7 @@ $(document).ready(function() {
                         //ClearCurrentSpell(currentRecipe);
                         //console.log("setting to creating spell");
                         if(RecipeInPlace()){
+                            castStars = false;
                             startTimer = true;
                             curBattleState = battleState.CreatingSpell;
                         }
@@ -639,11 +760,15 @@ $(document).ready(function() {
                         //console.log("casating spell");
 					break;
 					case(battleState.DamageEnemy):
-                        curEnemy.takeDamage(currentRecipe['Damage']*spellScale);
+                        if(!castStars){
+                            CreateStars(currentRecipe['Damage']*spellScale);
+                            castStars = true;
+                        }
+                        //curEnemy.takeDamage(currentRecipe['Damage']*spellScale);
 					break;
                     case(battleState.DamagePlayer):
                         player.takeDamage(1);
-                        timer = 30;
+                        timer = maxTimer;
                         frameCount = 0;
                         curBattleState = battleState.CreatingSpell;
                     break;
@@ -670,7 +795,7 @@ $(document).ready(function() {
 		rightButton.draw();
 		leftButton.draw();
 
-        if(Object.keys(currentSpell).length > 0)
+        if(Object.keys(currentSpell).length > 0 && curStars.length == 0)
             castButton.draw();
 
         if(Object.keys(currentRecipe).length > 0){
@@ -693,7 +818,7 @@ $(document).ready(function() {
             var radius = 30;
 
             canvas.beginPath();
-            canvas.arc(centerX, centerY, radius, 0, 2 * Math.PI * (timer/30), false);
+            canvas.arc(centerX, centerY, radius, 0, 2 * Math.PI * (timer/maxTimer), false);
             //canvas.fillStyle = 'green';
             //canvas.fill();
             canvas.lineWidth = 23;
@@ -720,6 +845,12 @@ $(document).ready(function() {
         if(curGems.length > 0){
             curGems.forEach(function(g) {
                 g.draw();
+            });
+        }
+
+        if(curStars.length > 0){
+            curStars.forEach(function(s) {
+                s.draw();
             });
         }
 	}
@@ -755,7 +886,7 @@ $(document).ready(function() {
                     }
 
                     if(!found){
-                        currentSpell[selEle.plus.element] = CreateElement(selEle.plus.element, selEle.plus.number, 430-Object.keys(currentSpell).length*50, 60, selEle.x, selEle.y, selEle.img, false);
+                        currentSpell[selEle.plus.element] = CreateElement(selEle.plus.element, selEle.plus.number, 430-Object.keys(currentSpell).length*60, 60, selEle.x, selEle.y, selEle.img, false);
                     }
     		    }
                 
