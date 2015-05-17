@@ -1,0 +1,106 @@
+/*CSS for Math Wiz*/
+
+
+#body {
+
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Latio;
+    height: auto;
+    width: 100%;
+ 
+       background: black;
+}
+
+#banner{
+    /*border: 5px double #c3c3c3;*/
+    width: 75%;
+    height: 10%; 
+    background: black;
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+}
+
+#canDiv{
+   border: 3px double white;
+}
+h1{
+    border: 5px double #c3c3c3;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: fantasy;
+    padding: 0px; 
+}
+
+h2{
+   color: rgb(0,162,232);
+}
+
+p {
+  
+   color: rgb(0,162,232);
+}
+
+.boardcaption {
+    font-size: 4vw;
+    text-align: center;
+    
+}
+
+#canDiv{
+    width: 600px;
+    margin: auto;
+}
+
+#myCanvas{
+    margin: auto;
+}
+#nav{
+    
+   width: 150px;
+    height: 25px; 
+    background: black;
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+   margin: auto;
+}
+
+#nav table {
+   padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+
+}
+#nav td{
+   border: double;
+   color: rgb(0,162,232);
+   padding-bottom: 0px;
+   
+   
+}
+#footer{
+   width: 130px;
+    height: 50px; 
+    background: rgb(49,53,61);
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+    
+}
+
+
+#directions{
+   width: 600px;
+    height: 100px; 
+    background: black;
+    padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block;
+    
+}
+
+.btn{
+	border: 10px double;
+	color: #FFFFFF;
+}
+.btn:hover {
+	border: 10px dotted;
+	color: #FFFFFF;
+}
+
+.btn:active {
+	border: #FF6F59;
+}
