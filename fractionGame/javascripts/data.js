@@ -113,7 +113,7 @@ function drawAnswers(){
 		canvas.font = "10px Georgia";
 		canvas.fillText("Play Again!", 695, 90);
 		canvas.fillText("See High Scores", 695, 210);
-		canvas.fillText("Main Menu", 695, 325);
+		canvas.fillText("Great Job!", 695, 325);
 	}
 
 }
@@ -183,8 +183,8 @@ function checkAnswer(index){
 			window.location.href = "./highScores.html";	        
 			break;
 	    case 2:
-	    	//go to menu
-	        window.location.href = "./menu.html";	
+	    	//go to ?
+	        window.location.href = "./highScores.html";	
 	        break;
 	    default:
     		break;
