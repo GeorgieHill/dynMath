@@ -29,10 +29,10 @@ $(document).ready(function() {
 	}, 1000/FPS);
 */
 	var bolt = new Image();
-	bolt.src = "/images/bolt.png";
+	bolt.src = './images/bolt.png';
 
 	var scroll = new Image();
-	scroll.src = "/images/scroll.png";
+	scroll.src = './images/scroll.png';
 
 	boltPath = {
 
@@ -142,41 +142,45 @@ $(document).ready(function() {
 	//var canvas = document.getElementById("myCanvas");
 
 	topButton = {
-		/*color: "#87E5BB",
+		//color: "#87E5BB",
 		width: 100,
-		height: 100,*/
+		height: 100,
 		x: 680,
 		y: 30,
 		draw: function() {
+			console.log("in top draw");
 			//	canvas.fillStyle = this.color;
 			//	canvas.fillRect(this.x, this.y, this.width, this.height);
 			canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
+
 	topButton.draw();
 
 	middleButton = {
-		color: "#87E5BB",
+		//color: "#87E5BB",
 		width: 100,
 		height: 100,
 		x: 680,
 		y: 150,
 		draw: function() {
-				canvas.fillStyle = this.color;
-				canvas.fillRect(this.x, this.y, this.width, this.height);
+				//canvas.fillStyle = this.color;
+				//canvas.fillRect(this.x, this.y, this.width, this.height);
+				canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
 	middleButton.draw();
 
 	bottomButton = {
-		color: "#87E5BB",
+		//color: "#87E5BB",
 		width: 100,
 		height: 100,
 		x: 680,
 		y: 270,
 		draw: function() {
-				canvas.fillStyle = this.color;
-				canvas.fillRect(this.x, this.y, this.width, this.height);
+				//canvas.fillStyle = this.color;
+				//canvas.fillRect(this.x, this.y, this.width, this.height);
+				canvas.drawImage(scroll, this.x, this.y);
 		}
 	};
 	bottomButton.draw();
