@@ -80,8 +80,8 @@ $(document).ready(function() {
 			gradient.addColorStop("0.58","#FFFFFF");
 
 			canvas.fillStyle = gradient;
-			canvas.fillText("Score: " + num ,350,50);
-			canvas.drawImage(gem, 300, 20);
+			canvas.fillText("Score: " + num*10 ,350,50);
+			canvas.drawImage(gem, 300, 15);
 		}
 	}
 
