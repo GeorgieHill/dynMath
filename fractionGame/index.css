@@ -1,28 +1,34 @@
 /* Main Styles */
 
+dialog {  
+    width: 500px;  
+    background:#e8e8e8;
+    border: 1px solid #dadada;
+    font-family:sans-serif;
+    padding: 5px 10px 20px 20px;
+} 
 
-
-/*  Help PopUp Styles */
+/*  Button Styles */
 
 #menuButtons {
-	width: 70%;
-	margin-left: 15%;
-	margin-right: 15%;
-	background-color: #fff;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
 }
 
 .btn {
 	width: 20%;
 	height: 30px;
-	margin: 7px 5px 7px 5px;
+	margin: 3px 5px 9px 5px;
 	float: left;
-	color: #fff;
+	color: #000;
 	font-size: 12px;
 	font-weight: bold;
 	text-shadow: 0px -1px 0px #394963;
 	outline: none;
 	border: 1px solid rgba(0, 0, 0, .5);
-	background-color: #92CDCF;
+	background-color: #DD2525;
 	cursor: pointer;
 
 	-webkit-background-clip: padding-box;
@@ -32,11 +38,11 @@
 }
 
 .btn:hover {
-	background-color: #2EA4A8;
+	background-color: #FF6F59;
 }
 
 .btn:active {
-	background-color: #2EA4A8;
+	background-color: #FF6F59;
 }
 .clearBoth{
     clear: both;

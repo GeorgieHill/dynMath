@@ -5,6 +5,7 @@ var bottomButton;
 var firstHeart;
 var secondHeart;
 var thirdHeart;
+var updateScore;
 
 $(document).ready(function() {
 /*	680, 30, 100, 100);
@@ -96,7 +97,7 @@ $(document).ready(function() {
 			gradient.addColorStop("0.58","#FFFFFF");
 
 			canvas.fillStyle = gradient;
-			canvas.fillText("Score: " + num*10 ,350,50);
+			canvas.fillText("Score: " + num ,350,50);
 			canvas.drawImage(gem, 300, 15);
 			canvas.drawImage(wizard, 350, 140);
 			canvas.drawImage(brace, 150, 70);
@@ -209,7 +210,7 @@ $(document).ready(function() {
 		if(boltPath != null)
 			boltPath.draw();
 
-		updateScore.draw(0);
+		updateScore.draw(score);
 
 		switch(getLives()) {
 	    case 3:

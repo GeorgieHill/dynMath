@@ -136,7 +136,8 @@ function checkAnswer(index){
 
 	if (choices[index]==answer){
 
-		score+=1;
+		score+=10;
+		updateScore.draw(score);
 
 		swal({  
 			title: successPhrase[successIndex], 
@@ -230,6 +231,19 @@ function endGame(){
 			}
 		});//end alert*/
 }
-
+function howToPlay(){
+	//pop up game instructions
+	(function() {  
+	    var dialog = document.getElementById("helpWindow");  
+	    var yes = document.getElementById("showWindow");
+	    console.log(dialog);
+	    document.getElementById("showWindow").onclick = function() {  
+	        dialog.show();  
+	    };  
+	    document.getElementById('exit').onclick = function() {  
+	        dialog.close();  
+	        };  
+	    })();
+}
 
 
