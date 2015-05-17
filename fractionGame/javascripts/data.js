@@ -171,24 +171,19 @@ function checkAnswer(index){
 	}else{
 		switch(index) {
 	    case 0:
+	    	//set variables back to start values
 	    	alive=true;
-	        var lives = 3;
-			var score=0;
-
-			//topButton.draw();
-			//middleButton.draw();
-			//bottomButton.draw();
-
-			//firstHeart.draw("#DD2525");
-			//secondHeart.draw("#DD2525");
-	        //thirdHeart.draw("#DD2525");
-
+	        lives = 3;
+			score=0;
+			//get quiz choices
 			getChoices();
 	        break;
 	    case 1:
+	    	//go to high scores screen
 			window.location.href = "./highScores.html";	        
 			break;
 	    case 2:
+	    	//go to menu
 	        window.location.href = "./menu.html";	
 	        break;
 	    default:
@@ -228,11 +223,10 @@ function playMore(){
 		getChoices();
 	}else{
 		alive=false;
-		//endGame();
 	}
 }//end playmore
 
-function endGame(){
+/*function endGame(){
 	//alert to end game
 	//var isConfirm = true;
 	topButton.draw();
@@ -245,34 +239,7 @@ function endGame(){
 	canvas.fillText("See High Scores", 695, 210);
 	canvas.fillText("Main Menu", 695, 325);
 
-
-	/*swal({   
-		title: "No More Lives!",   
-		text: "Great Game... Please Play Again!",   
-		showCancelButton: true,   
-		confirmButtonColor: "#DD6B55",   
-		confirmButtonText: "Play Again",   
-		cancelButtonText: "See High Scores",  
-		timer: 25555, 
-		closeOnConfirm: true,   
-		closeOnCancel: true 
-		}, function(){
-			if(isConfirm){
-				//start over
-				var lives = 3;
-				var score=0;
-
-				topButton.draw();
-				middleButton.draw();
-				bottomButton.draw();
-
-				getChoices();
-			}else{
-				//go to high score screen
-				window.location.href = "./highScores.html";
-			}
-		});//end alert*/
-}
+}*/
 function howToPlay(){
 	//pop up game instructions
 	swal({  
@@ -280,18 +247,6 @@ function howToPlay(){
 			text: "Click on the number that is not equivalent to the other two!",  
 			showConfirmButton: true });
 
-
-	/*(function() {  
-	    var dialog = document.getElementById("helpWindow");  
-	    var yes = document.getElementById("showWindow");
-	    //console.log(dialog);
-	    document.getElementById("showWindow").onclick = function() {  
-	        dialog.show();  
-	    };  
-	    document.getElementById('exit').onclick = function() {  
-	        dialog.close();  
-	        };  
-	    })();*/
 }
 
 
