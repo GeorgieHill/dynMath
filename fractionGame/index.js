@@ -37,6 +37,12 @@ $(document).ready(function() {
 	var gem = new Image();
 	gem.src = './images/gem.png';
 
+	var wizard = new Image();
+	wizard.src = './images/wizard.png';
+
+	var brace = new Image();
+	brace.src = './images/brace.png';
+
 	boltPath = {
 
 		startX: 350,
@@ -82,6 +88,8 @@ $(document).ready(function() {
 			canvas.fillStyle = gradient;
 			canvas.fillText("Score: " + num*10 ,350,50);
 			canvas.drawImage(gem, 300, 15);
+			canvas.drawImage(wizard, 350, 140);
+			canvas.drawImage(brace, 150, 70);
 		}
 	}
 
