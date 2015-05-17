@@ -42,8 +42,13 @@ var lives = 3;
 //variable to hold number of correct answers
 var score=0;
 
+//boolean to store if player is alive
+alive=true;
+
 //fill choices array for display on screen
 function getChoices(){
+
+	//howToPlay();
 
 	//range of keys in gameOps1
 	var opsMin = 0;
@@ -85,15 +90,6 @@ function getChoices(){
  	//shuffle the array for random display
  	choices = shuffleArray(choices);
 
-	console.log(matchKey);
-    console.log(answerKey);
-	console.log(matchAIndex);
-    console.log(matchBIndex);
- 	console.log(matchA);
-    console.log(matchB);
- 	console.log(answer);
- 	console.log(choices);
-
  	//put choices text onto canvas
  	canvas.fillStyle = "#254441"
 	canvas.font = "25px Georgia";
@@ -106,11 +102,20 @@ function getChoices(){
 
 /*ADDED FOR REDRAWING STUFF*/
 function drawAnswers(){
- 	canvas.fillStyle = "#254441"
-	canvas.font = "25px Georgia";
-	canvas.fillText(choices[0], 695, 90);
-	canvas.fillText(choices[1], 695, 210);
-	canvas.fillText(choices[2], 695, 325);
+	if(alive){
+	 	canvas.fillStyle = "#254441"
+		canvas.font = "25px Georgia";
+		canvas.fillText(choices[0], 695, 90);
+		canvas.fillText(choices[1], 695, 210);
+		canvas.fillText(choices[2], 695, 325);
+	}else{
+		canvas.fillStyle = "#254441"
+		canvas.font = "10px Georgia";
+		canvas.fillText("Play Again!", 695, 90);
+		canvas.fillText("See High Scores", 695, 210);
+		canvas.fillText("Main Menu", 695, 325);
+	}
+
 }
 
 function getLives(){
@@ -130,38 +135,66 @@ function shuffleArray(array) {
 
 function checkAnswer(index){
 
-	var successPhrase = ["Yes!", "Amazing!!", "You're Brilliant!!", "Wow!!", "Incredible!", 
-					"Great Job!!", "What a Brain!", "Keep It Up!", "Excellent!", "Mind Blown!"];
-	var successIndex = Math.floor(Math.random() * (successPhrase.length)-0) + 0;
+	if(alive){
+		var successPhrase = ["Yes!", "Amazing!!", "You're Brilliant!!", "Wow!!", "Incredible!", 
+						"Great Job!!", "What a Brain!", "Keep It Up!", "Excellent!", "Mind Blown!"];
+		var successIndex = Math.floor(Math.random() * (successPhrase.length)-0) + 0;
 
-	if (choices[index]==answer){
+		if (choices[index]==answer){
 
-		score+=10;
-		updateScore.draw(score);
+			score+=10;
 
-		swal({  
-			title: successPhrase[successIndex], 
-			text: "Your score is now " + score.toString() + "!!!",  
-			timer: 700,   
-			showConfirmButton: false });
-		//remove text from canvas
-		topButton.draw();
-		middleButton.draw();
-		bottomButton.draw();
-		//get next set of choices
-		getChoices();
+			swal({  
+				title: successPhrase[successIndex], 
+				text: "Your score is now " + score.toString() + "!!!",  
+				timer: 700,   
+				showConfirmButton: false });
+			//remove text from canvas
+			topButton.draw();
+			middleButton.draw();
+			bottomButton.draw();
+			//get next set of choices
+			getChoices();
+		}else{
+			//alert to show correct answer
+			swal({   
+				title: "Oops... That's not quite right...",   
+				text: matchA + " = " + matchB,   
+				html: true
+				}, function(){
+					//continue game
+					playMore();
+				});//end alert
+
+		}//end else for wrong answer
+	//not alive:
 	}else{
-		//alert to show correct answer
-		swal({   
-			title: "Oops... That's not quite right...",   
-			text: matchA + " = " + matchB,   
-			html: true
-			}, function(){
-				//continue game
-				playMore();
-			});//end alert
+		switch(index) {
+	    case 0:
+	    	alive=true;
+	        var lives = 3;
+			var score=0;
 
-	}//end else for wrong answer
+			//topButton.draw();
+			//middleButton.draw();
+			//bottomButton.draw();
+
+			//firstHeart.draw("#DD2525");
+			//secondHeart.draw("#DD2525");
+	        //thirdHeart.draw("#DD2525");
+
+			getChoices();
+	        break;
+	    case 1:
+			window.location.href = "./highScores.html";	        
+			break;
+	    case 2:
+	        window.location.href = "./menu.html";	
+	        break;
+	    default:
+    		break;
+	}//end switch
+	}
 }//end checkanswer function
 
 function playMore(){
@@ -194,17 +227,26 @@ function playMore(){
 		//get next set of choices
 		getChoices();
 	}else{
-		
-		endGame();
+		alive=false;
+		//endGame();
 	}
 }//end playmore
 
 function endGame(){
 	//alert to end game
 	//var isConfirm = true;
-	var isConfirm=false; 
+	topButton.draw();
+	middleButton.draw();
+	bottomButton.draw();
 
-	swal({   
+	canvas.fillStyle = "#254441"
+	canvas.font = "25px Georgia";
+	canvas.fillText("Play Again!", 695, 90);
+	canvas.fillText("See High Scores", 695, 210);
+	canvas.fillText("Main Menu", 695, 325);
+
+
+	/*swal({   
 		title: "No More Lives!",   
 		text: "Great Game... Please Play Again!",   
 		showCancelButton: true,   
@@ -233,17 +275,23 @@ function endGame(){
 }
 function howToPlay(){
 	//pop up game instructions
-	(function() {  
+	swal({  
+			title: "How to Play", 
+			text: "Click on the number that is not equivalent to the other two!",  
+			showConfirmButton: true });
+
+
+	/*(function() {  
 	    var dialog = document.getElementById("helpWindow");  
 	    var yes = document.getElementById("showWindow");
-	    console.log(dialog);
+	    //console.log(dialog);
 	    document.getElementById("showWindow").onclick = function() {  
 	        dialog.show();  
 	    };  
 	    document.getElementById('exit').onclick = function() {  
 	        dialog.close();  
 	        };  
-	    })();
+	    })();*/
 }
 
 
