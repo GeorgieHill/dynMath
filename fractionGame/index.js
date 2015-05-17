@@ -267,7 +267,8 @@ $(document).ready(function() {
 				//canvas.fillStyle = 'green';
 				//canvas.fill();
 				canvas.lineWidth = 23;
-				if(timer > 10)
+
+				if(timer > 5)
 						canvas.strokeStyle = 'green';
 				else
 						canvas.strokeStyle = 'red';
